@@ -29,9 +29,31 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
         if (!room) {
             return callback({
-                
+                success: false,
+                data: null,
             })
         }
+
+        const notice: NoticeData = {
+            username,
+        }
+
+        socket.join(roomId)
+
+        socket.broadcast.to(roomId).emit('userJoined', notice)
+
+        callback({
+            success: true,
+            data: {
+                id: room.id,
+                name: room.name,
+                users: [],
+            }
+        })
+    })
+
+    socket.on('disconnect', () => {
+        debug('A user disconnected', socket.id)
     })
 }
 
