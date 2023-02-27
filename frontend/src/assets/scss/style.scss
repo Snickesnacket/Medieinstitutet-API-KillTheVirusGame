@@ -1,7 +1,8 @@
 @import "bootstrap/scss/bootstrap";
 
 @import "./login/login.scss";
+@import "./lobby/lobby.scss";
 
 .hide {
-  display: none;
+  display: none !important;
 }
