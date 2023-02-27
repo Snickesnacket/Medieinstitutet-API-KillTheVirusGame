@@ -25,3 +25,4 @@ export interface UserJoinResult {
 	success: boolean
 	data: RoomInfoData | null
 }
+
