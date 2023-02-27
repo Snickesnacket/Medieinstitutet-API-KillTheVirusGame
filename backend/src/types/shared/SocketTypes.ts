@@ -13,3 +13,4 @@ export interface ClientToServerEvents {
 export interface NoticeData {
     username: string
 }
+
