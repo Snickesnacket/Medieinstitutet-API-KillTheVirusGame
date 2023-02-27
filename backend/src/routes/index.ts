@@ -1,5 +1,4 @@
 import express from "express"
-import resource from './_router'
 
 // instantiate a new router
 const router = express.Router()
