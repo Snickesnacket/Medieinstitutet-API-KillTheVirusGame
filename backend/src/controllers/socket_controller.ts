@@ -26,6 +26,12 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
                 id: roomId,
             }
         })
+
+        if (!room) {
+            return callback({
+                
+            })
+        }
     })
 }
 

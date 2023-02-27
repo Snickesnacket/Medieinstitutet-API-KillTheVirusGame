@@ -7,7 +7,7 @@ userJoined: (notice: NoticeData) => void
 
 export interface ClientToServerEvents {
     getRoomList: (callback: (rooms: Room[]) => void) => void
-    userJoin: (username: string, roomId: string, callback: RoomInfoData) => void
+    userJoin: (username: string, roomId: string, callback: (result: UserJoinResult) => void) => void
 }
 
 export interface InterServerEvents {
