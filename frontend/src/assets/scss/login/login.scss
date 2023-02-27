@@ -1,10 +1,19 @@
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#app,
+#login {
+  height: 100vh;
+  width: 100vw;
 }
-.container {
-  padding: 1rem;
-  width: 80%;
-  background-color: lightgray;
+
+#app {
+  background-color: lightblue;
+}
+
+#login {
+  display: flex;
+  align-items: center;
+
+  #username-form {
+    margin: 0 auto;
+    text-align: center;
+  }
 }
