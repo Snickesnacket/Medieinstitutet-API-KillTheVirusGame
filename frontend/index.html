@@ -9,14 +9,13 @@
   </head>
   <body>
     <div id="app">
-      <div id="login" class="container hide">
+      <div id="login" class="container">
         <form id="username-form">
           <div class="mb-3">
             <input
               type="text"
               id="username"
               class="form-control form-control-lg"
-              required
               placeholder="Username..."
             />
           </div>
@@ -26,6 +25,20 @@
           </button>
         </form>
       </div>
+      <div id="lobby" class="hide">
+        <div class="rooms">
+          <div class="room">
+            <p>Game 1</p>
+
+            <div class="mb-3 usersInGame">
+              <div class="user">USER 1: <span>1</span></div>
+              <div class="user">USER 2: <span>4</span></div>
+            </div>
+
+            <button class="btn btn-success">
+              <span>JOIN GAME</span>
+            </button>
+          </div>
     </div>
 
     <script type="module" src="/src/main.ts"></script>
