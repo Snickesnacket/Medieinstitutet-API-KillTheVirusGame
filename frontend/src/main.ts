@@ -11,6 +11,7 @@ const SOCKET_HOST = import.meta.env.VITE_APP_SOCKET_HOST
 const usernameFormEl = document.querySelector('#username-form') as HTMLFormElement
 const loginEl = document.querySelector('#login') as HTMLDivElement
 const lobbyEl = document.querySelector('#lobby') as HTMLDivElement
+const roomsEl = document.querySelector("#rooms") as HTMLDivElement
 
 let roomId: string | null = null
 let username: string | null = null
@@ -20,6 +21,27 @@ const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOS
 const showLobby = () => {
     loginEl.classList.add('hide')
     lobbyEl.classList.remove('hide')
+
+    socket.emit("getRoomList", (rooms) => {
+        console.log("Rooms:", rooms)
+    
+        roomsEl.innerHTML = rooms
+            .map((room) => `
+                <div class="room">
+                    <p>${room.name}</p>
+    
+                    <div class="mb-3 usersInGame">
+                        <div class="user">USER 1: 1</div>
+                        <div class="user">USER 2: 4</div>
+                    </div>
+    
+                    <button class="btn btn-success" id="joinBtn" value="${room.id}">
+                        JOIN GAME
+                    </button>
+                </div>
+            `)
+            .join("")
+    })
 }
 
 const showLoginView = () => {
@@ -36,6 +58,12 @@ socket.on('disconnect', () => {
     console.log('User disconnected', socket.id)
 })
 
+socket.emit("getRoomList", (rooms) => {
+    console.log("Rooms:", rooms);
+
+    roomId = rooms[0].id
+})
+
 usernameFormEl.addEventListener('submit', e => {
     e.preventDefault()
 
@@ -45,5 +73,16 @@ usernameFormEl.addEventListener('submit', e => {
         return
     }
 
-    showLobby()
+    socket.emit("userJoin", username, roomId!, (result) => {
+        console.log("join:", result);
+
+        if (!result.success || !result.data) {
+            alert("No access.")
+            return
+        }
+
+        const roomInfo = result.data
+
+        showLobby()
+    })
 })

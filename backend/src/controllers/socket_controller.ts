@@ -9,17 +9,19 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
     debug('A user connected', socket.id)
 
     socket.on('getRoomList', async (callback) => {
-        const rooms = await prisma.room.findMany()
+        const rooms = await prisma.room.findMany({
+            include: {
+                users: true
+            }
+        })
 
         debug('Got request for rooms, sending room list %o', rooms)
         
-        setTimeout(() => {
-            callback(rooms)
-        }, 1500)
+        callback(rooms)
     })
 
     socket.on('userJoin', async (username, roomId, callback) => {
-        debug('user %s wants to join the room %s', username, roomId)
+        debug("🆕 %s joined room: %s", username, roomId)
 
         const room = await prisma.room.findUnique({
             where: {
