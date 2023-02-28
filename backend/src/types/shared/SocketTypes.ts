@@ -1,4 +1,4 @@
-import { Room, User, Result} from '@prisma/client'
+import { Room, User } from '@prisma/client'
 export {}
 
 export interface ServerToClientEvents {
@@ -14,7 +14,11 @@ export interface InterServerEvents {
 }
 
 export interface NoticeData {
-    username: string
+
+}
+
+export interface InterServerEvents {
+
 }
 
 export interface RoomInfoData extends Room {
