@@ -25,6 +25,7 @@
           </button>
         </form>
       </div>
+
       <div id="lobby" class="hide">
         <div class="rooms">
           <div class="room">
@@ -39,6 +40,56 @@
               <span>JOIN GAME</span>
             </button>
           </div>
+
+          <div class="room">
+            <p>Game 2</p>
+
+            <div class="mb-3 usersInGame">
+              <div class="user">USER 1: <span>1</span></div>
+              <div class="user">USER 2: <span>4</span></div>
+            </div>
+
+            <button class="btn btn-danger" disabled>
+              <span>JOIN GAME</span>
+            </button>
+          </div>
+          
+          <div class="room">
+            <p>Game 3</p>
+
+            <div class="mb-3 usersInGame">
+              <div class="user">USER 1: <span>1</span></div>
+              <div class="user">USER 2: <span>4</span></div>
+            </div>
+
+            <button class="btn btn-success">
+              <span>JOIN GAME</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="scoreboard">
+          <h2>Scoreboard</h2>
+
+          <h3>
+            Highscore: <span id="hiUser">User 7</span>:
+            <span id="hiScore">00:04:12</span>
+          </h3>
+
+          <ul>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+            <li>Game 1: User 1: 3, User 2: 4</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="/src/main.ts"></script>

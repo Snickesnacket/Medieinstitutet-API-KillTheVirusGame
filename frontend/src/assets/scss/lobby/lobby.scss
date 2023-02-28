@@ -1,0 +1,43 @@
+#lobby {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  height: 100vh;
+  width: 100vw;
+  padding: 1rem;
+}
+
+.scoreboard {
+  padding: 1rem;
+  text-align: center;
+  background-color: lightgray;
+}
+
+.rooms {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: flex-start;
+  gap: 1rem;
+
+  .room {
+    padding: 0.6rem;
+    background-color: lightgrey;
+    text-align: center;
+    max-height: max-content;
+
+    .usersInGame {
+      display: flex;
+      gap: 1rem;
+
+      .user {
+        background-color: gray;
+        padding: 0.4rem;
+        border-radius: 5px;
+      }
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
