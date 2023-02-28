@@ -10,5 +10,43 @@
 .game-board {
   width: 100%;
   height: 100%;
+  border: 2px solid gray;
   background-color: lightgray;
+}
+
+.scoreboard-title {
+  background-color: gray;
+  color: white;
+}
+
+.score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .username {
+    color: darkgray;
+  }
+  
+  .score-result {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-size: 2rem;
+    color: gray;
+  }
+}
+
+.user-time {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  background-color: gray;
+
+  .username-time {
+    font-size: 1.4rem;
+  }
+
+  .time {
+    font-size: 3rem;
+  }
 }
