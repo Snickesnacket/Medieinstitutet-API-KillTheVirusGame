@@ -19,9 +19,22 @@ const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOS
 
 const showLobby = () => {
     loginEl.classList.add('hide')
-    console.log("Hello")
     lobbyEl.classList.remove('hide')
 }
+
+const showLoginView = () => {
+    loginEl.classList.remove('hide')
+}
+
+socket.on('connect', () => {
+	console.log('Connected To Server', socket.id)
+
+	showLoginView()
+})
+
+socket.on('disconnect', () => {
+    console.log('User disconnected', socket.id)
+})
 
 usernameFormEl.addEventListener('submit', e => {
     e.preventDefault()
@@ -29,7 +42,6 @@ usernameFormEl.addEventListener('submit', e => {
     username = (usernameFormEl.querySelector('#username') as HTMLInputElement).value.trim()
 
     if (!username) {
-        console.log("Insert Name")
         return
     }
 
