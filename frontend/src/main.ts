@@ -26,6 +26,7 @@ const showLobby = () => {
         console.log("Rooms:", rooms)
     
         roomsEl.innerHTML = rooms
+            .filter(room => room.name !== "#lobby")
             .map((room) => `
                 <div class="room">
                     <p>${room.name}</p>
