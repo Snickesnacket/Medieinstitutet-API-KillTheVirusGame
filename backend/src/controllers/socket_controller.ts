@@ -57,6 +57,16 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
     socket.on("createUser", async (username, callback) => {
         console.log("User:", username, socket.id);
 
+        const found = await prisma.user.findUnique({
+            where: {
+                name: username
+            }
+        })
+
+        if (found) {
+            return
+        }
+
         const user = await prisma.user.upsert({
             where: {
                 id: socket.id
