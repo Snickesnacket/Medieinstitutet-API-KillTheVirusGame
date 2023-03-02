@@ -10,3 +10,7 @@ export const getUsersInRoom = async (roomId: string) => {
     }
   })
 }
+
+export const deleteAllUsers = () => {
+  return prisma.user.deleteMany()
+}

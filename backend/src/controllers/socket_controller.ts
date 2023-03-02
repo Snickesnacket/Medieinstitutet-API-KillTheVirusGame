@@ -41,6 +41,8 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
         const usersInRoom = await getUsersInRoom(roomId)
 
+        // socket.broadcast.to(roomId).emit('onlineUsers', usersInRoom)
+
         if (!room) {
             return callback({
                 success: false,
@@ -76,16 +78,6 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
     socket.on("createUser", async (username, callback) => {
         console.log("User:", username, socket.id);
 
-        const found = await prisma.user.findUnique({
-            where: {
-                name: username
-            }
-        })
-
-        if (found) {
-            return
-        }
-
         const user = await prisma.user.upsert({
             where: {
                 id: socket.id
@@ -111,8 +103,24 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         })
     })
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         debug('A user disconnected', socket.id)
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: socket.id,
+            }
+        })
+        if (!user) {
+            return
+        }
+
+        await prisma.user.delete({
+            where: {
+                id: socket.id
+            }
+        })
+        const users = await getUsersInRoom(user.roomId)
+        socket.broadcast.emit('onlineUsers', users)
     })
 }
-

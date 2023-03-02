@@ -7,7 +7,7 @@
     "build": "env-cmd --silent bash scripts/build.sh",
     "build-app": "tsc",
     "migrate": "npx prisma migrate deploy",
-    "dev": "cross-env DEBUG=prisma-boilerplate:* nodemon server.ts",
+    "dev": "cross-env DEBUG=FED22-API-KTV-GRUPP-3:* nodemon server.ts",
     "start": "node build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

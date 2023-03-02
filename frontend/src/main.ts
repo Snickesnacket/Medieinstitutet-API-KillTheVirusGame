@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client'
 import {
 	ClientToServerEvents,
 	ServerToClientEvents,
+    User,
 } from '../../backend/src/types/shared/SocketTypes'
 
 
@@ -66,6 +67,15 @@ socket.on('disconnect', () => {
     console.log('User disconnected', socket.id)
 })
 
+const updateOnlineUsers = (users: User[]) => {
+    console.log("updateOnlineUsers:", users)
+}
+
+socket.on('onlineUsers', (users) => {
+    updateOnlineUsers(users)
+})
+
+
 usernameFormEl.addEventListener('submit', e => {
     e.preventDefault()
 
@@ -113,6 +123,7 @@ roomsEl.addEventListener("click", e => {
             console.log("User joined room:", roomId, result)
 
             showGameView()
+            
         })
     }
 })
