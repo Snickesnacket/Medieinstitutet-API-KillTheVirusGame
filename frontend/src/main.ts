@@ -67,12 +67,12 @@ socket.on('disconnect', () => {
     console.log('User disconnected', socket.id)
 })
 
-const updateOnlineUsers = (users: User[]) => {
-    console.log("updateOnlineUsers:", users)
+const updateUsers = (users: User[]) => {
+    console.log("updateUsers:", users)
 }
 
 socket.on('onlineUsers', (users) => {
-    updateOnlineUsers(users)
+    updateUsers(users)
 })
 
 

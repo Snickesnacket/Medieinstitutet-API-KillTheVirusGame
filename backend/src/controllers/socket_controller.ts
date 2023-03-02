@@ -115,11 +115,16 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
             return
         }
 
-        await prisma.user.delete({
+        await prisma.user.update({
             where: {
                 id: socket.id
+            },
+            data: {
+                roomId: '63ff434d4572c0af47e2782b',
             }
         })
+
+        socket.join('63ff434d4572c0af47e2782b')
         const users = await getUsersInRoom(user.roomId)
         socket.broadcast.emit('onlineUsers', users)
     })
