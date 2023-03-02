@@ -48,7 +48,7 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
             })
         }
 
-        if (usersInRoom.length > 1) {
+        if (usersInRoom.length > 2) {
             return callback({
                 success: false,
                 data: null
