@@ -30,6 +30,15 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
             }
         })
 
+        const user = await prisma.user.update({
+            where: {
+                id: socket.id
+            },
+            data: {
+                roomId: roomId
+            }
+        })
+
         if (!room) {
             return callback({
                 success: false,
