@@ -16,7 +16,7 @@ model Room {
 }
 
 model User {
-  id        String        @id @map("_id") @db.ObjectId
+  id        String        @id @map("_id")
   name      String        @unique
   speed     Int
 
@@ -30,7 +30,7 @@ model Result {
   id        String      @id @map("_id")
   score     Int
 
-  userId    String      @db.ObjectId
+  userId    String      
   user      User        @relation(fields: [userId], references: [id])   
 
   roomId    String      @db.ObjectId

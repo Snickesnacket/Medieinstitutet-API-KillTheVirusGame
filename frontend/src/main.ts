@@ -27,6 +27,7 @@ const showLobby = () => {
         console.log("Rooms:", rooms)
     
         roomsEl.innerHTML = rooms
+            .filter(room => room.name !== "#lobby")
             .map((room) => `
                 <div class="room">
                     <p>${room.name}</p>
@@ -59,22 +60,20 @@ socket.on('disconnect', () => {
     console.log('User disconnected', socket.id)
 })
 
-socket.emit("getRoomList", (rooms) => {
-    console.log("Rooms:", rooms);
-
-    roomId = rooms[0].id
-})
-
 usernameFormEl.addEventListener('submit', e => {
     e.preventDefault()
 
     username = (usernameFormEl.querySelector('#username') as HTMLInputElement).value.trim()
+    
+    socket.emit("getRoomList", (rooms) => {
+        roomId = rooms[0].id
+    })
 
     if (!username) {
         return
     }
 
-    socket.emit("userJoin", username, roomId!, (result) => {
+    socket.emit("createUser", username, (result) => {
         console.log("join:", result);
 
         if (!result.success || !result.data) {
@@ -83,6 +82,7 @@ usernameFormEl.addEventListener('submit', e => {
         }
 
         const roomInfo = result.data
+        console.log(roomInfo)
 
         showLobby()
     })
