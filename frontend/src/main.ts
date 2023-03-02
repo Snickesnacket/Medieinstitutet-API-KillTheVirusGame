@@ -107,7 +107,7 @@ roomsEl.addEventListener("click", e => {
 
         socket.emit("userJoin", username, roomId, (result) => {
             if (!result.success) {
-                return console.log(`Room with id ${roomId} is full.`)
+                return alert(`Room with id ${roomId} is full.`)
             }
 
             console.log("User joined room:", roomId, result)
