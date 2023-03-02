@@ -11,6 +11,7 @@ const SOCKET_HOST = import.meta.env.VITE_APP_SOCKET_HOST
 const usernameFormEl = document.querySelector('#username-form') as HTMLFormElement
 const loginEl = document.querySelector('#login') as HTMLDivElement
 const lobbyEl = document.querySelector('#lobby') as HTMLDivElement
+const gameEl = document.querySelector("#game") as HTMLDivElement
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement
 
 let roomId: string | null = null
@@ -48,6 +49,11 @@ const showLobby = () => {
 
 const showLoginView = () => {
     loginEl.classList.remove('hide')
+}
+
+const showGameView = () => {
+    lobbyEl.classList.add("hide")
+    gameEl.classList.remove("hide")
 }
 
 socket.on('connect', () => {
@@ -101,6 +107,8 @@ roomsEl.addEventListener("click", e => {
 
         socket.emit("userJoin", username, roomId, (result) => {
             console.log("User joined room:", roomId, result)
+
+            showGameView()
         })
     }
 })
