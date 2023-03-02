@@ -39,10 +39,19 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
             }
         })
 
+        const usersInRoom = await getUsersInRoom(roomId)
+
         if (!room) {
             return callback({
                 success: false,
                 data: null,
+            })
+        }
+
+        if (usersInRoom.length > 1) {
+            return callback({
+                success: false,
+                data: null
             })
         }
 
@@ -51,8 +60,6 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         // }
 
         socket.join(roomId)
-
-        const usersInRoom = await getUsersInRoom(roomId)
 
         // socket.broadcast.to(roomId).emit('userJoined', notice)
 
