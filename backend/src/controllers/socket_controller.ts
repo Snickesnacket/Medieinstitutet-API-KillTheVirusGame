@@ -2,6 +2,7 @@ import Debug from 'debug'
 import { Socket } from 'socket.io'
 import { ClientToServerEvents, NoticeData, ServerToClientEvents } from '../types/shared/SocketTypes'
 import prisma from '../prisma'
+import { getUsersInRoom } from '../services/UserService'
 
 const debug = Debug('FED22-API-KTV-GRUPP-3:socket_controller')
 
@@ -36,20 +37,22 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
             })
         }
 
-        const notice: NoticeData = {
-            username,
-        }
+        // const notice: NoticeData = {
+        //     username,
+        // }
 
         socket.join(roomId)
 
-        socket.broadcast.to(roomId).emit('userJoined', notice)
+        const usersInRoom = await getUsersInRoom(roomId)
+
+        // socket.broadcast.to(roomId).emit('userJoined', notice)
 
         callback({
             success: true,
             data: {
                 id: room.id,
                 name: room.name,
-                users: [],
+                users: usersInRoom,
             }
         })
     })
