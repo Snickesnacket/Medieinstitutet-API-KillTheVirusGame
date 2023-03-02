@@ -7,7 +7,7 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-    getRoomList: (callback: (rooms: Room[]) => void) => void
+    getRoomList: (callback: (rooms: RoomInfoData[]) => void) => void
     userJoin: (username: string, roomId: string, callback: (result: UserJoinResult) => void) => void
     createUser: (username: string, callback: (result: UserJoinResult) => void) => void
 }

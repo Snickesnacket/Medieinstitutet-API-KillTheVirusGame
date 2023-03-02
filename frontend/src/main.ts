@@ -27,24 +27,30 @@ const showLobby = () => {
 
     socket.emit("getRoomList", (rooms) => {
         console.log("Rooms:", rooms)
+
+        console.log(rooms[0].users[0].name)
     
         roomsEl.innerHTML = rooms
-            .filter(room => room.name !== "#lobby")
-            .map((room) => `
+        .filter(room => room.name !== "#lobby")
+        .map((room) => {
+            const user1 = room.users[0] ? room.users[0].name : "";
+            const user2 = room.users[1] ? room.users[1].name : "";
+            return `
                 <div class="room">
                     <p>${room.name}</p>
     
                     <div class="mb-3 usersInGame">
-                        <div class="user">USER 1: 1</div>
-                        <div class="user">USER 2: 4</div>
+                        <div class="user">${user1}</div>
+                        <div class="user">${user2}</div>
                     </div>
     
                     <button class="btn btn-success" id="joinBtn" value="${room.id}">
                         JOIN GAME
                     </button>
                 </div>
-            `)
-            .join("")
+            `;
+        })
+        .join("");
     })
 }
 
