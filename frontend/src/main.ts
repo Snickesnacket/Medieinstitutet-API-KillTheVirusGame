@@ -3,7 +3,6 @@ import { io, Socket } from 'socket.io-client'
 import {
 	ClientToServerEvents,
 	ServerToClientEvents,
-    User,
 } from '../../backend/src/types/shared/SocketTypes'
 
 
@@ -27,8 +26,6 @@ const showLobby = () => {
 
     socket.emit("getRoomList", (rooms) => {
         console.log("Rooms:", rooms)
-
-        console.log(rooms[0].users[0].name)
     
         roomsEl.innerHTML = rooms
             .filter(room => room.name !== "#lobby")
@@ -71,15 +68,6 @@ socket.on('connect', () => {
 socket.on('disconnect', () => {
     console.log('User disconnected', socket.id)
 })
-
-const updateUsers = (users: User[]) => {
-    console.log("updateUsers:", users)
-}
-
-socket.on('onlineUsers', (users) => {
-    updateUsers(users)
-})
-
 
 usernameFormEl.addEventListener('submit', e => {
     e.preventDefault()
