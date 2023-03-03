@@ -62,8 +62,9 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
         const x = Math.floor(Math.random() * gameBoardSize.x)
         const y = Math.floor(Math.random() * gameBoardSize.y)
-        const timeout = 5000
+        const timeout = Math.floor(Math.random() * (5000 - 1000 * 1) + 1000)
 
+        console.log(timeout)
         console.log(gameBoardSize, x, y)
 
         if (usersInRoom.length >= 2) {
