@@ -2,12 +2,14 @@ import { Room, User } from '@prisma/client'
 export {}
 
 export interface ServerToClientEvents {
-    userJoined: (notice: NoticeData) => void
+    userJoined: (user: User[]) => void
+    startGame: (timeout: number, x: number, y: number) => void
+    waitingForPlayers: (users: User[]) => void
 }
 
 export interface ClientToServerEvents {
     getRoomList: (callback: (rooms: RoomInfoData[]) => void) => void
-    userJoin: (username: string, roomId: string, callback: (result: UserJoinResult) => void) => void
+    userJoin: (gameBoardSize: {x: number, y: number}, username: string, roomId: string, callback: (result: UserJoinResult) => void) => void
     createUser: (username: string, callback: (result: UserJoinResult) => void) => void
 }
 
