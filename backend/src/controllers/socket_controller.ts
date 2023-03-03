@@ -111,8 +111,29 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         })
     })
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         debug('A user disconnected', socket.id)
-    })
-}
 
+        const user = await prisma.user.findUnique({
+            where: {
+                id: socket.id,
+            }
+        })
+        if (!user) {
+            return
+        }
+
+        await prisma.user.update({
+            where: {
+                id: socket.id
+            },
+            data: {
+                roomId: '63ff434d4572c0af47e2782b',
+            }
+        })
+
+        socket.join('63ff434d4572c0af47e2782b')
+        const users = await getUsersInRoom(user.roomId)
+        // socket.broadcast.emit('onlineUsers', users)
+}
+)}
