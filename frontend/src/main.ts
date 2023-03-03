@@ -13,6 +13,7 @@ const loginEl = document.querySelector('#login') as HTMLDivElement
 const lobbyEl = document.querySelector('#lobby') as HTMLDivElement
 const gameEl = document.querySelector("#game") as HTMLDivElement
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement
+const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement
 
 let roomId: string | null = null
 let username: string | null = null
@@ -69,6 +70,21 @@ socket.on('disconnect', () => {
     console.log('User disconnected', socket.id)
 })
 
+socket.on("startGame", (timeout, x, y) => {
+    console.log("Game will start soon.")
+
+    setTimeout(() => {
+        gameBoardEl.innerHTML += `
+            <div id="virus" style="position: absolute; top: ${y}px; left: ${x}px;">👾</div>
+        `
+    }, timeout)
+})
+
+socket.on("waitingForPlayers", (users) => {
+    console.log("Waiting for a player to join...")
+    console.log(users)
+})
+
 usernameFormEl.addEventListener('submit', e => {
     e.preventDefault()
 
@@ -108,12 +124,17 @@ roomsEl.addEventListener("click", e => {
             return
         }
 
-        socket.emit("userJoin", username, roomId, (result) => {
+        const gameBoardSize = {
+            x: gameBoardEl.offsetWidth,
+            y: gameBoardEl.offsetHeight
+        }
+
+        console.log(gameBoardSize, gameBoardEl.clientWidth, gameBoardEl.offsetWidth)
+
+        socket.emit("userJoin", gameBoardSize ,username, roomId, (result) => {
             if (!result.success) {
                 return alert(`Room with id ${roomId} is full.`)
             }
-
-            console.log("User joined room:", roomId, result)
 
             showGameView()
         })
