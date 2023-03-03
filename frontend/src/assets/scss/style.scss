@@ -5,5 +5,8 @@
 @import "./game/game.scss";
 
 .hide {
-  display: none !important;
+  // display: none !important;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
 }
