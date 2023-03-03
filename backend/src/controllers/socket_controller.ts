@@ -1,12 +1,12 @@
 import Debug from 'debug'
-import { Socket } from 'socket.io'
+import { Socket, Server } from 'socket.io'
 import { ClientToServerEvents, NoticeData, ServerToClientEvents } from '../types/shared/SocketTypes'
 import prisma from '../prisma'
 import { getUsersInRoom } from '../services/UserService'
 
 const debug = Debug('FED22-API-KTV-GRUPP-3:socket_controller')
 
-export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToClientEvents>) => {
+export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToClientEvents>, io: Server<ClientToServerEvents, ServerToClientEvents>) => {
     debug('A user connected', socket.id)
 
     socket.on('getRoomList', async (callback) => {
@@ -21,14 +21,19 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         callback(rooms)
     })
 
-    socket.on('userJoin', async (username, roomId, callback) => {
+    socket.on('userJoin', async (gameBoardSize, username, roomId, callback) => {
         debug("🆕 %s joined room: %s", username, roomId)
 
         const room = await prisma.room.findUnique({
             where: {
                 id: roomId,
+            }, 
+            include: {
+                users: true
             }
         })
+
+        socket.join(roomId)
 
         const user = await prisma.user.update({
             where: {
@@ -55,13 +60,17 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
             })
         }
 
-        // const notice: NoticeData = {
-        //     username,
-        // }
+        const x = Math.floor(Math.random() * gameBoardSize.x)
+        const y = Math.floor(Math.random() * gameBoardSize.y)
+        const timeout = 5000
 
-        socket.join(roomId)
+        console.log(gameBoardSize, x, y)
 
-        // socket.broadcast.to(roomId).emit('userJoined', notice)
+        if (usersInRoom.length >= 2) {
+            io.to(roomId).timeout(10000).emit("startGame", timeout, x, y)
+        } else {
+            io.to(roomId).timeout(10000).emit("waitingForPlayers", usersInRoom)
+        }
 
         callback({
             success: true,
@@ -134,6 +143,5 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
         socket.join('63ff434d4572c0af47e2782b')
         const users = await getUsersInRoom(user.roomId)
-        // socket.broadcast.emit('onlineUsers', users)
-}
+    }
 )}
