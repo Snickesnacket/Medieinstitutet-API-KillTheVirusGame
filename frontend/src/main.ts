@@ -31,26 +31,25 @@ const showLobby = () => {
         console.log(rooms[0].users[0].name)
     
         roomsEl.innerHTML = rooms
-        .filter(room => room.name !== "#lobby")
-        .map((room) => {
-            const user1 = room.users[0] ? room.users[0].name : "";
-            const user2 = room.users[1] ? room.users[1].name : "";
-            return `
+            .filter(room => room.name !== "#lobby")
+            .map((room) => {
+                const userOne = room.users[0] ? room.users[0].name : "free";
+                const userTwo = room.users[1] ? room.users[1].name : "free";
+                return `
                 <div class="room">
                     <p>${room.name}</p>
     
                     <div class="mb-3 usersInGame">
-                        <div class="user">${user1}</div>
-                        <div class="user">${user2}</div>
+                        <div class="user">${userOne}</div>
+                        <div class="user">${userTwo}</div>
                     </div>
     
                     <button class="btn btn-success" id="joinBtn" value="${room.id}">
                         JOIN GAME
                     </button>
                 </div>
-            `;
-        })
-        .join("");
+            `})
+            .join("")
     })
 }
 
@@ -123,7 +122,7 @@ roomsEl.addEventListener("click", e => {
 
         socket.emit("userJoin", username, roomId, (result) => {
             if (!result.success) {
-                return console.log(`Room with id ${roomId} is full.`)
+                return alert(`Room with id ${roomId} is full.`)
             }
 
             console.log("User joined room:", roomId, result)
