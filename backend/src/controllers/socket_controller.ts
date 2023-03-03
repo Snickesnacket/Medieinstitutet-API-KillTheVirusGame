@@ -137,6 +137,5 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
         socket.join('63ff434d4572c0af47e2782b')
         const users = await getUsersInRoom(user.roomId)
-        socket.broadcast.emit('onlineUsers', users)
     })
 }
