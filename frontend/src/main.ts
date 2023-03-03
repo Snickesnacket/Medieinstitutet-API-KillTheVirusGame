@@ -29,20 +29,23 @@ const showLobby = () => {
     
         roomsEl.innerHTML = rooms
             .filter(room => room.name !== "#lobby")
-            .map((room) => `
+            .map((room) => {
+                const userOne = room.users[0] ? room.users[0].name : "free";
+                const userTwo = room.users[1] ? room.users[1].name : "free";
+                return `
                 <div class="room">
                     <p>${room.name}</p>
     
                     <div class="mb-3 usersInGame">
-                        <div class="user">USER 1: 1</div>
-                        <div class="user">USER 2: 4</div>
+                        <div class="user">${userOne}</div>
+                        <div class="user">${userTwo}</div>
                     </div>
     
                     <button class="btn btn-success" id="joinBtn" value="${room.id}">
                         JOIN GAME
                     </button>
                 </div>
-            `)
+            `})
             .join("")
     })
 }
