@@ -24,15 +24,18 @@
     background-color: lightgrey;
     text-align: center;
     max-height: max-content;
+    width: 20%;
 
     .usersInGame {
       display: flex;
       gap: 1rem;
+      justify-content: center;
 
       .user {
         background-color: gray;
         padding: 0.4rem;
         border-radius: 5px;
+        overflow: hidden;
       }
     }
 
