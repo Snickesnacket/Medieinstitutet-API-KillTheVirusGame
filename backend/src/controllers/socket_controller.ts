@@ -46,6 +46,8 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
         const usersInRoom = await getUsersInRoom(roomId)
 
+        // socket.broadcast.to(roomId).emit('onlineUsers', usersInRoom)
+
         if (!room) {
             return callback({
                 success: false,
@@ -95,6 +97,7 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         if (found) {
             return
         }
+
 
         const user = await prisma.user.upsert({
             where: {
