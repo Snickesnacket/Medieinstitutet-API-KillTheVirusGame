@@ -18,7 +18,7 @@ model Room {
 model User {
   id        String        @id @map("_id")
   name      String        @unique
-  speed     Int
+  speed     Float
 
   roomId    String        @db.ObjectId
   room      Room          @relation(fields: [roomId], references: [id])
