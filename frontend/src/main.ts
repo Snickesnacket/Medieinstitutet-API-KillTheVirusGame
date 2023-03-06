@@ -15,11 +15,10 @@ const gameEl = document.querySelector("#game") as HTMLDivElement
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement
 const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement
 
-const userOneEl = document.querySelector('.userOne') as HTMLSpanElement
-const userTwoEl = document.querySelector('.userTwo') as HTMLSpanElement
+const userOneEl = document.querySelector('#userOne') as HTMLSpanElement
+const userTwoEl = document.querySelector('#userTwo') as HTMLSpanElement
 
-const userOneScoreEl = document.querySelector('.userOneScore') as HTMLSpanElement
-const userTwoScoreEl = document.querySelector('.userTwoScore') as HTMLSpanElement
+const scoreResultEl = document.querySelector('.score-result') as HTMLSpanElement
 
 let roomId: string | null = null
 let username: string | null = null
@@ -116,8 +115,7 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
             userTwoScore++
         }
 
-        userOneScoreEl.innerHTML = `${userOneScore}`
-        userTwoScoreEl.innerHTML = `${userTwoScore}`
+        scoreResultEl.innerHTML = `${userOneScore} - ${userTwoScore}`
 
     // Clear the board of virus
     gameBoardEl.innerHTML = ""
