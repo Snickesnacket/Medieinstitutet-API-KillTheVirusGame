@@ -17,7 +17,7 @@ const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement
 
 let roomId: string | null = null
 let username: string | null = null
-
+let gameRound: number = 0
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST)
 
@@ -85,6 +85,29 @@ socket.on("waitingForPlayers", (users) => {
     console.log(users)
 })
 
+socket.on("updateGame", (newGameRound, timeout, x, y) => {
+    // Increase gameRound by 1
+    gameRound = newGameRound
+    console.log("- NEXT ROUND -", gameRound)
+
+    // Clear the board of virus
+    gameBoardEl.innerHTML = ""
+
+    // If 10 rounds have been played, emit gameOver to server
+    if (gameRound === 10) {
+        socket.emit("gameOver", socket.id)
+
+        showLobby()
+    }
+
+    // Render new virus after timeout
+    setTimeout(() => {
+        gameBoardEl.innerHTML += `
+            <div id="virus" style="position: absolute; top: ${y}px; left: ${x}px;">👾</div>
+        `
+    }, timeout)
+})
+
 usernameFormEl.addEventListener('submit', e => {
     e.preventDefault()
 
@@ -138,5 +161,20 @@ roomsEl.addEventListener("click", e => {
 
             showGameView()
         })
+    }
+})
+
+gameBoardEl.addEventListener("click", e => {
+    const target = e.target as HTMLDivElement
+
+    if (target.id === "virus") {
+        console.log("User " + socket.id + " clicked the virus!")
+
+        const gameBoardSize = {
+            x: gameBoardEl.offsetWidth,
+            y: gameBoardEl.offsetHeight
+        }
+
+        socket.emit("virusClicked", gameBoardSize, gameRound, socket.id)
     }
 })
