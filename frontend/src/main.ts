@@ -19,6 +19,10 @@ let roomId: string | null = null
 let username: string | null = null
 let gameRound: number = 0
 
+// Time of virus render (createdTime) & time-to-click virus (clickTime)
+let createdTime: number = 0
+let clickTime: number = 0
+
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST)
 
 const showLobby = () => {
@@ -77,6 +81,8 @@ socket.on("startGame", (timeout, x, y) => {
         gameBoardEl.innerHTML += `
             <div id="virus" style="position: absolute; top: ${y}px; left: ${x}px;">👾</div>
         `
+
+        createdTime = Date.now()
     }, timeout)
 })
 
@@ -85,19 +91,27 @@ socket.on("waitingForPlayers", (users) => {
     console.log(users)
 })
 
-socket.on("updateGame", (newGameRound, timeout, x, y) => {
+socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
     // Increase gameRound by 1
     gameRound = newGameRound
     console.log("- NEXT ROUND -", gameRound)
+    console.log(`User ${users[0].name}: ${users[0].speed}`)
+    console.log(`User ${users[1].name}: ${users[1].speed}`)
 
     // Clear the board of virus
     gameBoardEl.innerHTML = ""
 
     // If 10 rounds have been played, emit gameOver to server
     if (gameRound === 10) {
+        gameBoardEl.innerHTML = ""
+
         socket.emit("gameOver", socket.id)
 
+        gameRound = 0
+
         showLobby()
+        
+        return
     }
 
     // Render new virus after timeout
@@ -105,6 +119,9 @@ socket.on("updateGame", (newGameRound, timeout, x, y) => {
         gameBoardEl.innerHTML += `
             <div id="virus" style="position: absolute; top: ${y}px; left: ${x}px;">👾</div>
         `
+
+        // Time of virus render
+        createdTime = Date.now()
     }, timeout)
 })
 
@@ -175,6 +192,10 @@ gameBoardEl.addEventListener("click", e => {
             y: gameBoardEl.offsetHeight
         }
 
-        socket.emit("virusClicked", gameBoardSize, gameRound, socket.id)
+        clickTime = Date.now()
+
+        const reactionTime: number = (clickTime - createdTime) / 1000
+
+        socket.emit("virusClicked", gameBoardSize, gameRound, reactionTime, socket.id)
     }
 })
