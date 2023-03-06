@@ -146,15 +146,21 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         const users = await getUsersInRoom(user.roomId)
     })
 
-    socket.on("virusClicked", async (gameBoardSize, gameRound, socketId) => {
+    socket.on("virusClicked", async (gameBoardSize, gameRound, reactionTime, socketId) => {
         gameRound++
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.update({
             where: {
                 id: socketId
             },
-            include: {
-                room: true
+            data: {
+                speed: reactionTime
+            }
+        })
+
+        const users = await prisma.user.findMany({
+            where: {
+                roomId: user.roomId
             }
         })
 
@@ -162,20 +168,32 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
             return
         }
 
-        const x = Math.floor(Math.random() * gameBoardSize.x)
-        const y = Math.floor(Math.random() * gameBoardSize.y)
-        const timeout = Math.floor(Math.random() * (5000 - 1000 * 1) + 1000)
+        if (users[0].speed > 0 && users[1].speed > 0) {
+            const x = Math.floor(Math.random() * gameBoardSize.x)
+            const y = Math.floor(Math.random() * gameBoardSize.y)
+            const timeout = Math.floor(Math.random() * (5000 - 1000 * 1) + 1000)
 
-        io.to(user.roomId).emit("updateGame", gameRound, timeout, x, y)
+            io.to(user.roomId).emit("updateGame", users, gameRound, timeout, x, y)
+
+            await prisma.user.updateMany({
+                where: {
+                    roomId: user.roomId
+                },
+                data: {
+                    speed: 0
+                }
+            })
+        }
     })
 
     socket.on("gameOver", async (socketId) => {
-        // Update user.roomId to the lobbyId
+        // Update user.roomId to the lobbyId & speed to 0
         const user = await prisma.user.update({
             where: {
                 id: socketId
             }, 
             data: {
+                speed: 0,
                 roomId: "63ff434d4572c0af47e2782b"
             }
         })
