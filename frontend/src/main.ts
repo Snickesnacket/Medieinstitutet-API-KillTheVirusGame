@@ -37,6 +37,7 @@ const showLobby = () => {
             .map((room) => {
                 const userOne = room.users[0] ? room.users[0].name : "free";
                 const userTwo = room.users[1] ? room.users[1].name : "free";
+
                 return `
                 <div class="room">
                     <p>${room.name}</p>
@@ -50,7 +51,8 @@ const showLobby = () => {
                         JOIN GAME
                     </button>
                 </div>
-            `})
+            `
+            })
             .join("")
     })
 }
@@ -153,6 +155,9 @@ usernameFormEl.addEventListener('submit', e => {
     })
 })
 
+const userOneEl = document.querySelector('.userOne') as HTMLSpanElement
+const userTwoEl = document.querySelector('.userTwo') as HTMLSpanElement
+
 roomsEl.addEventListener("click", e => {
     const target = e.target as HTMLButtonElement
 
@@ -164,6 +169,16 @@ roomsEl.addEventListener("click", e => {
             return
         }
 
+        socket.on('userNames', (users) => {
+            console.log(users)
+            users.forEach((user) => {
+                console.log("Hello", user.name)
+                userOneEl.innerHTML = users[0]?.name || ''
+                userTwoEl.innerHTML = users[1]?.name || ''
+            })
+        })
+
+
         const gameBoardSize = {
             x: gameBoardEl.offsetWidth,
             y: gameBoardEl.offsetHeight
@@ -172,6 +187,7 @@ roomsEl.addEventListener("click", e => {
         console.log(gameBoardSize, gameBoardEl.clientWidth, gameBoardEl.offsetWidth)
 
         socket.emit("userJoin", gameBoardSize ,username, roomId, (result) => {
+            
             if (!result.success) {
                 return alert(`Room with id ${roomId} is full.`)
             }

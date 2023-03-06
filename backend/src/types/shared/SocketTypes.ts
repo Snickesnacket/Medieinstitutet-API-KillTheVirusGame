@@ -6,6 +6,7 @@ export interface ServerToClientEvents {
     startGame: (timeout: number, x: number, y: number) => void
     waitingForPlayers: (users: User[]) => void
     updateGame: (users: User[], newGameRound: number, timeout: number, x: number, y: number) => void
+    userNames: (users: User[]) => void
 }
 
 export interface ClientToServerEvents {

@@ -45,6 +45,7 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         })
 
         const usersInRoom = await getUsersInRoom(roomId)
+        const namesInRoom = await getNamesInRoom(roomId)
 
         // socket.broadcast.to(roomId).emit('onlineUsers', usersInRoom)
 
@@ -66,6 +67,8 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         const y = Math.floor(Math.random() * gameBoardSize.y)
         const timeout = Math.floor(Math.random() * (5000 - 1000 * 1) + 1000)
 
+        io.to(roomId).emit('userNames', namesInRoom)
+
         console.log(timeout)
         console.log(gameBoardSize, x, y)
 
@@ -84,6 +87,16 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
             }
         })
     })
+
+    const getNamesInRoom = async (roomId : string) => {
+        const users = await prisma.user.findMany({
+            where: {
+                roomId
+            }
+        })
+
+        return users
+    }
 
     socket.on("createUser", async (username, callback) => {
         console.log("User:", username, socket.id);
