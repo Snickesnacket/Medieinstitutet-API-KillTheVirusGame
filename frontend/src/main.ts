@@ -110,9 +110,9 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
     console.log(`User ${users[1].name}: ${users[1].speed}`)
 
         if (users[0].speed > users[1].speed) {
-            userOneScore++
-        } else {
             userTwoScore++
+        } else {
+            userOneScore++
         }
 
         scoreResultEl.innerHTML = `${userOneScore} - ${userTwoScore}`
