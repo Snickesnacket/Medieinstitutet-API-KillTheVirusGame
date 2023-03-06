@@ -10,12 +10,12 @@
 .game-board {
   min-width: 100%;
   min-height: 100%;
-  border: 2px solid gray;
-  background-color: lightgray;
+  border: 2px solid rgb(155, 196, 196);
+  background-color: seashell;
 }
 
 .scoreboard-title {
-  background-color: gray;
+  background-color: rgb(155, 196, 196);
   color: white;
 }
 
@@ -40,7 +40,7 @@
   display: flex;
   flex-direction: column;
   color: white;
-  background-color: gray;
+  background-color: rgb(155, 196, 196);
 
   .username-time {
     font-size: 1.4rem;
