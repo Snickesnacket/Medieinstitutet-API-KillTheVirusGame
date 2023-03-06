@@ -15,6 +15,12 @@ const gameEl = document.querySelector("#game") as HTMLDivElement
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement
 const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement
 
+const userOneEl = document.querySelector('.userOne') as HTMLSpanElement
+const userTwoEl = document.querySelector('.userTwo') as HTMLSpanElement
+
+const userOneScoreEl = document.querySelector('.userOneScore') as HTMLSpanElement
+const userTwoScoreEl = document.querySelector('.userTwoScore') as HTMLSpanElement
+
 let roomId: string | null = null
 let username: string | null = null
 let gameRound: number = 0
@@ -22,6 +28,10 @@ let gameRound: number = 0
 // Time of virus render (createdTime) & time-to-click virus (clickTime)
 let createdTime: number = 0
 let clickTime: number = 0
+
+// Total score for each user
+let userOneScore = 0
+let userTwoScore = 0
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST)
 
@@ -100,6 +110,15 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
     console.log(`User ${users[0].name}: ${users[0].speed}`)
     console.log(`User ${users[1].name}: ${users[1].speed}`)
 
+        if (users[0].speed > users[1].speed) {
+            userOneScore++
+        } else {
+            userTwoScore++
+        }
+
+        userOneScoreEl.innerHTML = `${userOneScore}`
+        userTwoScoreEl.innerHTML = `${userTwoScore}`
+
     // Clear the board of virus
     gameBoardEl.innerHTML = ""
 
@@ -154,9 +173,6 @@ usernameFormEl.addEventListener('submit', e => {
         showLobby()
     })
 })
-
-const userOneEl = document.querySelector('.userOne') as HTMLSpanElement
-const userTwoEl = document.querySelector('.userTwo') as HTMLSpanElement
 
 roomsEl.addEventListener("click", e => {
     const target = e.target as HTMLButtonElement
