@@ -68,9 +68,9 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
         console.log(gameBoardSize, x, y)
 
         if (usersInRoom.length >= 2) {
-            io.to(roomId).timeout(10000).emit("startGame", timeout, x, y)
+            io.to(roomId).emit("startGame", timeout, x, y)
         } else {
-            io.to(roomId).timeout(10000).emit("waitingForPlayers", usersInRoom)
+            io.to(roomId).emit("waitingForPlayers", usersInRoom)
         }
 
         callback({
@@ -144,5 +144,43 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 
         socket.join('63ff434d4572c0af47e2782b')
         const users = await getUsersInRoom(user.roomId)
-    }
-)}
+    })
+
+    socket.on("virusClicked", async (gameBoardSize, gameRound, socketId) => {
+        gameRound++
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: socketId
+            },
+            include: {
+                room: true
+            }
+        })
+
+        if (!user) {
+            return
+        }
+
+        const x = Math.floor(Math.random() * gameBoardSize.x)
+        const y = Math.floor(Math.random() * gameBoardSize.y)
+        const timeout = Math.floor(Math.random() * (5000 - 1000 * 1) + 1000)
+
+        io.to(user.roomId).emit("updateGame", gameRound, timeout, x, y)
+    })
+
+    socket.on("gameOver", async (socketId) => {
+        // Update user.roomId to the lobbyId
+        const user = await prisma.user.update({
+            where: {
+                id: socketId
+            }, 
+            data: {
+                roomId: "63ff434d4572c0af47e2782b"
+            }
+        })
+
+        // User joins lobby room
+        socket.join("63ff434d4572c0af47e2782b")
+    })
+}
