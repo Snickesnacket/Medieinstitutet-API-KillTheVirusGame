@@ -12,27 +12,14 @@ model Room {
   name      String
 
   users     User[]
-  result    Result[]
 }
 
 model User {
   id        String        @id @map("_id")
   name      String        @unique
   speed     Float
+  score     Int
 
   roomId    String        @db.ObjectId
   room      Room          @relation(fields: [roomId], references: [id])
-
-  results   Result[]
 }
-
-model Result {
-  id        String      @id @map("_id")
-  score     Int
-
-  userId    String      
-  user      User        @relation(fields: [userId], references: [id])   
-
-  roomId    String      @db.ObjectId
-  room      Room        @relation(fields: [roomId], references: [id])   
-} 
