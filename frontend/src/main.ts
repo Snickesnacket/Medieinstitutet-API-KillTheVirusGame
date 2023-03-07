@@ -198,5 +198,7 @@ gameBoardEl.addEventListener("click", e => {
         const reactionTime: number = (clickTime - createdTime) / 1000
 
         socket.emit("virusClicked", gameBoardSize, gameRound, reactionTime, socket.id)
+
+        gameBoardEl.innerHTML = ""
     }
 })
