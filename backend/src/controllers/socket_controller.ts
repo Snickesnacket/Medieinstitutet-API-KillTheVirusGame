@@ -51,8 +51,6 @@ export const handleConnection = (
     const usersInRoom = await getUsersInRoom(roomId);
     const namesInRoom = await getNamesInRoom(roomId);
 
-    // socket.broadcast.to(roomId).emit('onlineUsers', usersInRoom)
-
     if (!room) {
       return callback({
         success: false,
