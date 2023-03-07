@@ -18,6 +18,12 @@ const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement
 const userOneEl = document.querySelector('#userOne') as HTMLSpanElement
 const userTwoEl = document.querySelector('#userTwo') as HTMLSpanElement
 
+const userOneNameEl = document.querySelector('#userOneName') as HTMLSpanElement
+const userTwoNameEl = document.querySelector('#userTwoName') as HTMLSpanElement
+
+const userOneTimeEl = document.querySelector('#userOneTime') as HTMLSpanElement
+const userTwoTimeEl = document.querySelector('#userTwoTime') as HTMLSpanElement
+
 const scoreResultEl = document.querySelector('.score-result') as HTMLSpanElement
 
 let roomId: string | null = null
@@ -28,15 +34,12 @@ let gameRound: number = 0
 let createdTime: number = 0
 let clickTime: number = 0
 
-// Total score for each user
-let userOneScore = 0
-let userTwoScore = 0
-
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST)
 
 const showLobby = () => {
     loginEl.classList.add('hide')
     lobbyEl.classList.remove('hide')
+    gameEl.classList.add('hide')
 
     socket.emit("getRoomList", (rooms) => {
         console.log("Rooms:", rooms)
@@ -109,13 +112,12 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
     console.log(`User ${users[0].name}: ${users[0].speed}`)
     console.log(`User ${users[1].name}: ${users[1].speed}`)
 
-        if (users[0].speed > users[1].speed) {
-            userTwoScore++
-        } else {
-            userOneScore++
-        }
+    console.log(users)
 
-        scoreResultEl.innerHTML = `${userOneScore} - ${userTwoScore}`
+    userOneTimeEl.innerText = `${users[0].speed}s`
+    userTwoTimeEl.innerText = `${users[1].speed}s`
+
+        scoreResultEl.innerHTML = `${users[0].score} - ${users[1].score}`
 
     // Clear the board of virus
     gameBoardEl.innerHTML = ""
@@ -125,6 +127,10 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
         gameBoardEl.innerHTML = ""
 
         socket.emit("gameOver", socket.id)
+
+        scoreResultEl.innerText = "0 - 0"
+        userOneTimeEl.innerText = "00:00"
+        userTwoTimeEl.innerText = "00:00"
 
         gameRound = 0
 
@@ -187,8 +193,11 @@ roomsEl.addEventListener("click", e => {
             console.log(users)
             users.forEach((user) => {
                 console.log("Hello", user.name)
-                userOneEl.innerHTML = users[0]?.name || ''
-                userTwoEl.innerHTML = users[1]?.name || ''
+                userOneEl.innerText = users[0]?.name || 'Empty'
+                userTwoEl.innerText = users[1]?.name || 'Empty'
+
+                userOneNameEl.innerText = users[0]?.name || 'Empty'
+                userTwoNameEl.innerText = users[1]?.name || 'Empty'
             })
         })
 
