@@ -215,15 +215,16 @@ export const handleConnection = (
           return;
         }
 
-            console.log("hi", users[0].speed)
-            console.log("hello", users[1].speed)  
+       
         const roomUsers = _user.room.users;
         // Define an array to store all the reaction times of both players
         let reactionTimes: number[] = [];
+         console.log("hi", users[0].speed)
+        console.log("hello", users[1].speed)  
 
         if (roomUsers[1].speed > 0 && roomUsers[0].speed > 0) {
 
-                      socket.on("reactionTime", async (reactionTime) => {
+            socket.on("reactionTime", async (reactionTime) => {
             // Find the user associated with the given socket ID
             const user = await prisma.user.findUnique({
               where: {
@@ -252,9 +253,29 @@ export const handleConnection = (
               });
             }
 
-          });
+              const users = await prisma.user.findMany({
+              where: {
+                highScore: {
+                  gt: 0 
+                }
+              },
+              orderBy: {
+                highScore: 'asc' 
+              },
+              take: 1 
+            })
+               let previousHighScore: any | null = null;
 
-         
+              if (users.length > 0) {
+                const currentHighScore = users[0].highScore; 
+                const currentUsername = users[0]?.name;
+          
+                if (previousHighScore === null || currentHighScore !== previousHighScore) {
+                  socket.emit('lowestHighScoreUser', currentUsername, currentHighScore!); 
+                  previousHighScore = { username: currentUsername, highScore: currentHighScore };
+                }
+              }
+          });
 
           const [fastestUser, secondFastestUser] =
             roomUsers[1].speed < roomUsers[0].speed

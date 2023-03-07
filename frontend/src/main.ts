@@ -15,6 +15,7 @@ const lobbyEl = document.querySelector("#lobby") as HTMLDivElement;
 const gameEl = document.querySelector("#game") as HTMLDivElement;
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement;
 const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement;
+const highscroreEl = document.querySelector('#highscore')
 
 const userOneEl = document.querySelector("#userOne") as HTMLSpanElement;
 const userTwoEl = document.querySelector("#userTwo") as HTMLSpanElement;
@@ -217,6 +218,7 @@ roomsEl.addEventListener("click", (e) => {
   }
 });
 
+
 gameBoardEl.addEventListener("click", (e) => {
   const target = e.target as HTMLDivElement;
 
@@ -239,6 +241,16 @@ gameBoardEl.addEventListener("click", (e) => {
     );
 
     socket.emit('reactionTime', reactionTime)
+    socket.on('lowestHighScoreUser', ( username, highScore ) => {
+    console.log("frontend says hi",username, highScore)
+
+    highscroreEl!.innerHTML = `
+     <span id="hiUser">${username[0]}</span>:
+            <span id="hiScore">${highScore}</span>
+    `
+})
+  
+ 
 
     gameBoardEl.innerHTML = "";
   }
