@@ -46,7 +46,6 @@ const showLobby = () => {
   gameEl.classList.add("hide");
 
   socket.emit("getRoomList", (rooms) => {
-
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
       .map((room) => {
@@ -163,7 +162,6 @@ usernameFormEl.addEventListener("submit", (e) => {
   }
 
   socket.emit("createUser", username, (result) => {
-
     if (!result.success || !result.data) {
       alert("No access.");
       return;
@@ -215,7 +213,6 @@ gameBoardEl.addEventListener("click", (e) => {
   const target = e.target as HTMLDivElement;
 
   if (target.id === "virus") {
-
     const gameBoardSize = {
       x: gameBoardEl.offsetWidth,
       y: gameBoardEl.offsetHeight,

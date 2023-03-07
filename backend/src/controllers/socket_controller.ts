@@ -98,7 +98,6 @@ export const handleConnection = (
   };
 
   socket.on("createUser", async (username, callback) => {
-
     const found = await prisma.user.findUnique({
       where: {
         name: username,
@@ -239,6 +238,7 @@ export const handleConnection = (
               roomId: user.roomId,
             },
           });
+
           io.to(user.roomId).emit(
             "updateGame",
             allUsers,
