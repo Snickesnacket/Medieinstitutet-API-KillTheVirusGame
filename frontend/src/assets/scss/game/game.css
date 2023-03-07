@@ -24,17 +24,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  .username {
-    color: darkgray;
-  }
-  
-  .score-result {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    font-size: 2rem;
-    color: gray;
-  }
+}
+.score .username {
+  color: darkgray;
+}
+.score .score-result {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  font-size: 2rem;
+  color: gray;
 }
 
 .user-time {
@@ -42,12 +40,10 @@
   flex-direction: column;
   color: white;
   background-color: rgb(155, 196, 196);
-
-  .username-time {
-    font-size: 1.4rem;
-  }
-
-  .time {
-    font-size: 3rem;
-  }
 }
+.user-time .username-time {
+  font-size: 1.4rem;
+}
+.user-time .time {
+  font-size: 3rem;
+}/*# sourceMappingURL=game.css.map */
