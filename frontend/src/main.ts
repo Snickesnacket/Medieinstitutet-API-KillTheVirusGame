@@ -122,6 +122,14 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
   if (gameRound === 10) {
     gameBoardEl.innerHTML = "";
 
+    if (users[0].score > users[1].score) {
+      alert(`${users[0].name} Won with ${users[0].score}!`)
+    } else if (users[0].score == users[1].score) {
+      alert('Draw! 5 - 5')
+    } else {
+      alert(`${users[1].name} Won with ${users[1].score}!`)
+    }
+
     socket.emit("gameOver", socket.id);
 
     scoreResultEl.innerText = "0 - 0";
