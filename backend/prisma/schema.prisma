@@ -19,6 +19,7 @@ model User {
   name  String @unique
   speed Float
   score Int
+  highScore Float?
 
   roomId String @db.ObjectId
   room   Room   @relation(fields: [roomId], references: [id])

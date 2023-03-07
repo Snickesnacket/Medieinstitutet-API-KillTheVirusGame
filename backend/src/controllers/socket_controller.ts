@@ -117,6 +117,7 @@ export const handleConnection = (
         name: username,
         speed: 0,
         score: 0,
+        highScore:0,
         roomId: "63ff434d4572c0af47e2782b",
       },
       update: {
@@ -214,9 +215,47 @@ export const handleConnection = (
           return;
         }
 
+            console.log("hi", users[0].speed)
+            console.log("hello", users[1].speed)  
         const roomUsers = _user.room.users;
+        // Define an array to store all the reaction times of both players
+        let reactionTimes: number[] = [];
 
         if (roomUsers[1].speed > 0 && roomUsers[0].speed > 0) {
+
+                      socket.on("reactionTime", async (reactionTime) => {
+            // Find the user associated with the given socket ID
+            const user = await prisma.user.findUnique({
+              where: {
+                id: socketId,
+              },
+            });
+
+            if (user) {
+              // Push the reaction time to the array
+              reactionTimes.push(reactionTime);
+
+                console.log('is this working?',reactionTime)
+
+              // Calculate the average reaction time after every round
+               const avgReactionTime = reactionTimes.length > 0 ? reactionTimes.reduce((acc, time) => acc + time, 0) / reactionTimes.length : 0;
+
+
+              // Update the user's high score in the database
+              await prisma.user.update({
+                where: {
+                  id: socketId,
+                },
+                data: {
+                  highScore: avgReactionTime,
+                },
+              });
+            }
+
+          });
+
+         
+
           const [fastestUser, secondFastestUser] =
             roomUsers[1].speed < roomUsers[0].speed
               ? [users[0], users[1]]

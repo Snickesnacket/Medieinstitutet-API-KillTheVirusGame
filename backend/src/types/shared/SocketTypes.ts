@@ -34,6 +34,7 @@ export interface ClientToServerEvents {
     socketId: string
   ) => void;
   gameOver: (socketId: string) => void;
+    reactionTime: (reactionTime: number) => void;
 }
 
 export interface RoomInfoData extends Room {

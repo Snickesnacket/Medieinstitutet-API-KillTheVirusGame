@@ -238,6 +238,8 @@ gameBoardEl.addEventListener("click", (e) => {
       socket.id
     );
 
+    socket.emit('reactionTime', reactionTime)
+
     gameBoardEl.innerHTML = "";
   }
 });
