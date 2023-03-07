@@ -9,7 +9,8 @@
 .scoreboard {
   padding: 1rem;
   text-align: center;
-  background-color: lightgray;
+  background-color: seashell;
+  border: 2px solid rgb(155, 196, 196);
 }
 
 .rooms {
@@ -21,7 +22,8 @@
 
   .room {
     padding: 0.6rem;
-    background-color: lightgrey;
+    background-color: seashell;
+    border: 2px solid rgb(155, 196, 196);
     text-align: center;
     max-height: max-content;
     width: 20%;
@@ -32,7 +34,7 @@
       justify-content: center;
 
       .user {
-        background-color: gray;
+        background-color: rgb(155, 196, 196);
         padding: 0.4rem;
         border-radius: 5px;
         overflow: hidden;
