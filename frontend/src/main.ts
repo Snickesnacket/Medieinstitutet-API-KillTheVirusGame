@@ -96,15 +96,17 @@ socket.on("updateLobby", () => {
       .filter((room) => room.name !== "#lobby")
       .map((room) => {
         const userOne = room.users[0] ? room.users[0].name : "free";
+        const userOneScore = room.users[0] ? room.users[0].score : 0;
         const userTwo = room.users[1] ? room.users[1].name : "free";
+        const userTwoScore = room.users[1] ? room.users[1].score : 0;
 
         return `
                 <div class="room">
                     <p>${room.name}</p>
     
                     <div class="mb-3 usersInGame">
-                        <div class="user">${userOne}</div>
-                        <div class="user">${userTwo}</div>
+                        <div class="user">${userOne}: ${userOneScore}</div>
+                        <div class="user">${userTwo}: ${userTwoScore}</div>
                     </div>
     
                     <button class="btn btn-success" id="joinBtn" value="${room.id}">

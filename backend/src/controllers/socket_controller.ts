@@ -260,6 +260,8 @@ export const handleConnection = (
           });
         }
 
+        io.emit("updateLobby");
+
         const updatedRoomUsers = await prisma.user.findMany({
           where: {
             roomId: user.roomId,
