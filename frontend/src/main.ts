@@ -40,26 +40,26 @@ let clickTime: number = 0;
 // Live counter
 let counter: number = 0;
 let intervalId: number;
-const counterEl = document.querySelector('.counter') as HTMLSpanElement;
+const counterEl = document.querySelector(".counter") as HTMLSpanElement;
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
   io(SOCKET_HOST);
 
-  const startCounter = () => {
-    intervalId = setInterval(function() {
-      counter+= 0.01;
-      counterEl.innerText = counter.toFixed(3)
-    }, 10);
-  }
-  
-  const stopCounter = () => {
-    clearInterval(intervalId);
-  }
+const startCounter = () => {
+  intervalId = setInterval(function () {
+    counter += 0.01;
+    counterEl.innerText = counter.toFixed(3);
+  }, 10);
+};
 
-  const resetCounter = () => {
-    counter = 0
-    counterEl.innerText = counter.toFixed(3)
-  }
+const stopCounter = () => {
+  clearInterval(intervalId);
+};
+
+const resetCounter = () => {
+  counter = 0;
+  counterEl.innerText = counter.toFixed(3);
+};
 
 const showLobby = () => {
   loginEl.classList.add("hide");
@@ -147,9 +147,9 @@ socket.on("startGame", (timeout, x, y) => {
     gameBoardEl.innerHTML += `
             <div id="virus" style="position: absolute; top: ${y}px; left: ${x}px;">👾</div>
         `;
-        stopCounter();
-        resetCounter()
-        startCounter();
+    stopCounter();
+    resetCounter();
+    startCounter();
 
     createdTime = Date.now();
   }, timeout);
@@ -201,9 +201,9 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
     gameBoardEl.innerHTML += `
             <div id="virus" style="position: absolute; top: ${y}px; left: ${x}px;">👾</div>
         `;
-        stopCounter();
-        resetCounter()
-        startCounter();
+    stopCounter();
+    resetCounter();
+    startCounter();
 
     // Time of virus render
     createdTime = Date.now();
@@ -286,14 +286,14 @@ gameBoardEl.addEventListener("click", (e) => {
 
     const reactionTime: number = (clickTime - createdTime) / 1000;
 
-    stopCounter()
+    stopCounter();
 
     socket.emit(
       "virusClicked",
       gameBoardSize,
       gameRound,
       reactionTime,
-      socket.id,
+      socket.id
     );
 
     gameBoardEl.innerHTML = "";
