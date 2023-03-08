@@ -14,6 +14,7 @@ export interface ServerToClientEvents {
   ) => void;
   userNames: (users: User[]) => void;
   lowestHighScoreUser: ( username: string, highScore:number) => void;
+  updateLobby: () => void;
 }
 
 export interface ClientToServerEvents {
