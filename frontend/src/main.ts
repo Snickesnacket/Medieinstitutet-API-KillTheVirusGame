@@ -45,6 +45,16 @@ const showLobby = () => {
   loginEl.classList.add("hide");
   lobbyEl.classList.remove("hide");
   gameEl.classList.add("hide");
+  
+  socket.on('lowestHighScoreUser', ( username, highScore ) => {
+    console.log("frontend says hi",username, highScore)
+
+    highscroreEl!.innerHTML = `
+     <span id="hiUser">${username}</span>:
+            <span id="hiScore">${highScore}</span>
+    `
+})
+  
 
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
@@ -66,11 +76,26 @@ const showLobby = () => {
                         JOIN GAME
                     </button>
                 </div>
-            `;
+                
+            `
       })
       .join("");
+   
   });
+
+    socket.on('lowestHighScoreUser', ( username, highScore ) => {
+    console.log("frontend says hi",username, highScore)
+
+    highscroreEl!.innerHTML = `
+     <span id="hiUser">${username}</span>:
+            <span id="hiScore">${highScore}</span>
+    `
+})
 };
+
+  
+
+
 
 const showLoginView = () => {
   loginEl.classList.remove("hide");
@@ -240,18 +265,19 @@ gameBoardEl.addEventListener("click", (e) => {
       socket.id
     );
 
-    socket.emit('reactionTime', reactionTime)
+         socket.emit('reactionTime', reactionTime)
     socket.on('lowestHighScoreUser', ( username, highScore ) => {
     console.log("frontend says hi",username, highScore)
 
     highscroreEl!.innerHTML = `
-     <span id="hiUser">${username[0]}</span>:
+     <span id="hiUser">${username}</span>:
             <span id="hiScore">${highScore}</span>
     `
 })
-  
- 
 
     gameBoardEl.innerHTML = "";
+
+
   }
 });
+
