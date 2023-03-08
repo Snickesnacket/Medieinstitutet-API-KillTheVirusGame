@@ -45,12 +45,20 @@ const counterEl = document.querySelector(".counter") as HTMLSpanElement;
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
   io(SOCKET_HOST);
 
-const startCounter = () => {
-  intervalId = setInterval(function () {
-    counter += 0.01;
-    counterEl.innerText = counter.toFixed(3);
-  }, 10);
-};
+  const startCounter = () => {
+    const incrementTime = 1000 / (1 / 0.001); 
+  
+    let lastTime = Date.now();
+    intervalId = setInterval(() => {
+      const now = Date.now();
+      const elapsed = now - lastTime;
+      lastTime = now;
+  
+      counter += elapsed * 0.001 / incrementTime;
+  
+      counterEl.innerText = counter.toFixed(3);
+    }, 1);
+  };
 
 const stopCounter = () => {
   clearInterval(intervalId);
