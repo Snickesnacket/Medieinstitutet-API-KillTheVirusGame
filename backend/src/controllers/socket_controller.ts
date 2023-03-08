@@ -85,6 +85,8 @@ export const handleConnection = (
         users: usersInRoom,
       },
     });
+
+    io.emit("updateLobby");
   });
 
   const getNamesInRoom = async (roomId: string) => {
@@ -282,5 +284,7 @@ export const handleConnection = (
 
     // User joins lobby room
     socket.join("63ff434d4572c0af47e2782b");
+
+    io.emit("updateLobby");
   });
 };

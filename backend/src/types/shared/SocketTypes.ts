@@ -13,6 +13,7 @@ export interface ServerToClientEvents {
     y: number
   ) => void;
   userNames: (users: User[]) => void;
+  updateLobby: () => void;
 }
 
 export interface ClientToServerEvents {

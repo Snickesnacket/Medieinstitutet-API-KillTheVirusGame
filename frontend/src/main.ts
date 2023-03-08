@@ -90,6 +90,33 @@ socket.on("disconnect", () => {
   console.log("User disconnected", socket.id);
 });
 
+socket.on("updateLobby", () => {
+  socket.emit("getRoomList", (rooms) => {
+    roomsEl.innerHTML = rooms
+      .filter((room) => room.name !== "#lobby")
+      .map((room) => {
+        const userOne = room.users[0] ? room.users[0].name : "free";
+        const userTwo = room.users[1] ? room.users[1].name : "free";
+
+        return `
+                <div class="room">
+                    <p>${room.name}</p>
+    
+                    <div class="mb-3 usersInGame">
+                        <div class="user">${userOne}</div>
+                        <div class="user">${userTwo}</div>
+                    </div>
+    
+                    <button class="btn btn-success" id="joinBtn" value="${room.id}">
+                        JOIN GAME
+                    </button>
+                </div>
+            `;
+      })
+      .join("");
+  });
+});
+
 socket.on("startGame", (timeout, x, y) => {
   console.log("Game will start soon.");
 
@@ -123,11 +150,11 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
     gameBoardEl.innerHTML = "";
 
     if (users[0].score > users[1].score) {
-      alert(`${users[0].name} Won with ${users[0].score}!`)
+      alert(`${users[0].name} Won with ${users[0].score}!`);
     } else if (users[0].score == users[1].score) {
-      alert('Draw! 5 - 5')
+      alert("Draw! 5 - 5");
     } else {
-      alert(`${users[1].name} Won with ${users[1].score}!`)
+      alert(`${users[1].name} Won with ${users[1].score}!`);
     }
 
     socket.emit("gameOver", socket.id);
