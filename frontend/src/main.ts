@@ -140,7 +140,7 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
   userOneTimeEl.innerText = `${users[0].speed}s`;
   userTwoTimeEl.innerText = `${users[1].speed}s`;
 
-  scoreResultEl.innerHTML = `${users[0].score} - ${users[1].score}`;
+  scoreResultEl.innerHTML = `${users[1].score} - ${users[0].score}`;
 
   // Clear the board of virus
   gameBoardEl.innerHTML = "";
