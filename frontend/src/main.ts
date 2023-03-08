@@ -96,9 +96,9 @@ socket.on("updateLobby", () => {
       .filter((room) => room.name !== "#lobby")
       .map((room) => {
         const userOne = room.users[0] ? room.users[0].name : "free";
-        const userOneScore = room.users[0] ? room.users[0].score : 0;
+        const userOneScore = room.users[1] ? room.users[1].score : 0;
         const userTwo = room.users[1] ? room.users[1].name : "free";
-        const userTwoScore = room.users[1] ? room.users[1].score : 0;
+        const userTwoScore = room.users[0] ? room.users[0].score : 0;
 
         return `
                 <div class="room">
