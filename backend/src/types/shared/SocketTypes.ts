@@ -40,6 +40,10 @@ export interface ClientToServerEvents {
   lowestHighScoreUser: (username: string, highScore: number) => void;
 }
 
+export interface InterServerEvents {
+  
+}
+
 export interface RoomInfoData extends Room {
   users: User[];
 }
