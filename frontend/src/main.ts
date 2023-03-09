@@ -16,6 +16,7 @@ const gameEl = document.querySelector("#game") as HTMLDivElement;
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement;
 const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement;
 const highscroreEl = document.querySelector('#highscore')
+const lobbyScoreboardEl = document.querySelector("#lobbyScoreboard") as HTMLUListElement
 
 const userOneEl = document.querySelector("#userOne") as HTMLSpanElement;
 const userTwoEl = document.querySelector("#userTwo") as HTMLSpanElement;
@@ -116,7 +117,7 @@ socket.on("disconnect", () => {
   console.log("User disconnected", socket.id);
 });
 
-socket.on("updateLobby", () => {
+socket.on("updateLobby", (games) => {
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
@@ -143,6 +144,11 @@ socket.on("updateLobby", () => {
       })
       .join("");
   });
+
+  lobbyScoreboardEl.innerHTML = games.map(game => {
+    `<li>${game.users[0]}: ${game.scores[0]} | ${game.users[1]}: ${game.scores[1]}</li>`
+  })
+  .join("")
 });
 
 socket.on("startGame", (timeout, x, y) => {
