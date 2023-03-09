@@ -37,6 +37,7 @@ export interface ClientToServerEvents {
   ) => void;
   gameOver: (socketId: string) => void;
   reactionTime: (reactionTime: number) => void;
+  getHighestScore: (callback: (users: any) => void) => void;
   lowestHighScoreUser: (username: string, highScore: number) => void;
 }
 

@@ -124,7 +124,7 @@ socket.on("disconnect", () => {
   console.log("User disconnected", socket.id);
 });
 
-socket.on("updateLobby", (games, username, highScore) => {
+socket.on("updateLobby", (games) => {
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
@@ -150,17 +150,19 @@ socket.on("updateLobby", (games, username, highScore) => {
             `;
       })
       .join("");
+  });
 
+  socket.emit("getHighestScore", (user) => {
     highscroreEl!.innerHTML = `
-      <span id="hiUser">${username}</span>:
-      <span id="hiScore">${highScore}</span>
+      <span id="hiUser">${user.name}</span>:
+      <span id="hiScore">${user.highScore}</span>
     `;
   });
 
   const gamesList = games.slice(Math.max(games.length - 10, 0));
   lobbyScoreboardEl.innerHTML = gamesList
     .map((game) => {
-      return `<li>${game.users[0]}: ${game.scores[1]} | ${game.users[1]}: ${game.scores[0]}</li>`;
+      return `<li>${game.users[0]}: ${game.scores[0]} | ${game.users[1]}: ${game.scores[1]}</li>`;
     })
     .join("");
 });
@@ -180,7 +182,7 @@ socket.on("startGame", (timeout, x, y) => {
   }, timeout);
 });
 
-socket.on("waitingForPlayers", (users) => {
+socket.on("waitingForPlayers", () => {
   console.log("Waiting for a player to join...");
 });
 
@@ -274,7 +276,7 @@ roomsEl.addEventListener("click", (e) => {
     }
 
     socket.on("userNames", (users) => {
-      users.forEach((user) => {
+      users.forEach(() => {
         userOneEl.innerText = users[0]?.name || "Empty";
         userTwoEl.innerText = users[1]?.name || "Empty";
 
@@ -320,9 +322,10 @@ gameBoardEl.addEventListener("click", (e) => {
       reactionTime,
       socket.id
     );
-    socket.on("lowestHighScoreUser", (username, highScore) => {
-      console.log("frontend says hi", username, highScore);
 
+    socket.emit("reactionTime", reactionTime);
+
+    socket.on("lowestHighScoreUser", (username, highScore) => {
       highscroreEl!.innerHTML = `
         <span id="hiUser">${username}</span>:
         <span id="hiScore">${highScore}</span>
