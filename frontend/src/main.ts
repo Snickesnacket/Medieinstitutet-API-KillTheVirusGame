@@ -162,7 +162,7 @@ socket.on("updateLobby", (games, username, highScore) => {
 
   const gamesList = games.slice(Math.max(games.length - 10, 0))
   lobbyScoreboardEl.innerHTML = gamesList.map(game => {
-    return `<li>${game.users[0]}: ${game.scores[0]} | ${game.users[1]}: ${game.scores[1]}</li>`
+    return `<li>${game.users[0]}: ${game.scores[1]} | ${game.users[1]}: ${game.scores[0]}</li>`
   })
   .join("")
 });
@@ -202,12 +202,12 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
   if (gameRound === 10) {
     gameBoardEl.innerHTML = "";
 
-    if (users[0].score > users[1].score) {
-      alert(`${users[0].name} Won with ${users[0].score}!`);
+    if (users[1].score > users[0].score) {
+      alert(`${users[0].name} Won with ${users[1].score}!`);
     } else if (users[0].score == users[1].score) {
       alert("Draw! 5 - 5");
     } else {
-      alert(`${users[1].name} Won with ${users[1].score}!`);
+      alert(`${users[1].name} Won with ${users[0].score}!`);
     }
 
     socket.emit("gameOver", socket.id);
