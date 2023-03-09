@@ -11,6 +11,7 @@
   text-align: center;
   background-color: seashell;
   border: 2px solid rgb(155, 196, 196);
+  width: 100%
 }
 
 .rooms {
@@ -26,7 +27,7 @@
     border: 2px solid rgb(155, 196, 196);
     text-align: center;
     max-height: max-content;
-    width: 20%;
+    width: 100%;
 
     .usersInGame {
       display: flex;
@@ -45,4 +46,56 @@
       width: 100%;
     }
   }
+}
+
+@media only screen and (min-width: 700px) {
+  #lobby {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    height: 100vh;
+    width: 100vw;
+    padding: 1rem;
+  }
+  
+  .scoreboard {
+    padding: 1rem;
+    text-align: center;
+    background-color: seashell;
+    border: 2px solid rgb(155, 196, 196);
+  }
+  
+  .rooms {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: flex-start;
+    gap: 1rem;
+  
+    .room {
+      padding: 0.6rem;
+      background-color: seashell;
+      border: 2px solid rgb(155, 196, 196);
+      text-align: center;
+      max-height: max-content;
+      width: 20%;
+  
+      .usersInGame {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+  
+        .user {
+          background-color: rgb(155, 196, 196);
+          padding: 0.4rem;
+          border-radius: 5px;
+          overflow: hidden;
+        }
+      }
+  
+      .btn {
+        width: 100%;
+      }
+    }
+  }
+  
 }
