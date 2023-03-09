@@ -128,6 +128,9 @@ export const handleConnection = (
       },
     });
 
+    const games = await prisma.game.findMany()
+    io.emit("updateLobby", games)
+
     callback({
       success: true,
       data: {
