@@ -15,20 +15,19 @@ export const handleConnection = (
 ) => {
   debug("A user connected", socket.id);
 
-     console.log("it is gonna happen")
   socket.on("getHighestScore", async (callback) => {
     const users = await prisma.user.findMany({
-              where: {
-                highScore: {
-                  gt: 0 
-                }
-              },
-              orderBy: {
-                highScore: 'asc' 
-              },
-              take: 1 
-            });
- console.log("this is the highscore", users[0].highScore)
+      where: {
+        highScore: {
+          gt: 0,
+        },
+      },
+      orderBy: {
+        highScore: "asc",
+      },
+      take: 1,
+    });
+
     callback(users[0]);
   });
 
@@ -42,7 +41,6 @@ export const handleConnection = (
     callback(rooms);
   });
 
-
   socket.on("userJoin", async (gameBoardSize, username, roomId, callback) => {
     debug("🆕 %s joined room: %s", username, roomId);
 
@@ -54,30 +52,36 @@ export const handleConnection = (
         users: true,
       },
     });
-            const users = await prisma.user.findMany({
-              where: {
-                highScore: {
-                  gt: 0 
-                }
-              },
-              orderBy: {
-                highScore: 'asc' 
-              },
-              take: 1 
-            })
-               let previousHighScore: any | null = null;
 
-              if (users.length > 0) {
-                const currentHighScore = users[0].highScore; 
-                const currentUsername = users[0]?.name;
-          
-               
-              
-                if (previousHighScore === null || currentHighScore !== previousHighScore) {
-                  socket.emit('lowestHighScoreUser', currentUsername, currentHighScore!)
-                  previousHighScore = { username: currentUsername, highScore: currentHighScore };
-                }
-              }
+    const users = await prisma.user.findMany({
+      where: {
+        highScore: {
+          gt: 0,
+        },
+      },
+      orderBy: {
+        highScore: "asc",
+      },
+      take: 1,
+    });
+
+    let previousHighScore: any | null = null;
+
+    if (users.length > 0) {
+      const currentHighScore = users[0].highScore;
+      const currentUsername = users[0]?.name;
+
+      if (
+        previousHighScore === null ||
+        currentHighScore !== previousHighScore
+      ) {
+        socket.emit("lowestHighScoreUser", currentUsername, currentHighScore!);
+        previousHighScore = {
+          username: currentUsername,
+          highScore: currentHighScore,
+        };
+      }
+    }
 
     socket.join(roomId);
 
@@ -128,9 +132,8 @@ export const handleConnection = (
       },
     });
 
-    const games = await prisma.game.findMany()
+    const games = await prisma.game.findMany();
     io.emit("updateLobby", games, user.name, user.highScore!);
-   
   });
 
   const getNamesInRoom = async (roomId: string) => {
@@ -163,7 +166,7 @@ export const handleConnection = (
         name: username,
         speed: 0,
         score: 0,
-        highScore:0,
+        highScore: 0,
         roomId: "63ff434d4572c0af47e2782b",
       },
       update: {
@@ -171,8 +174,8 @@ export const handleConnection = (
       },
     });
 
-    const games = await prisma.game.findMany()
-    io.emit("updateLobby", games, user.name, user.highScore! )
+    const games = await prisma.game.findMany();
+    io.emit("updateLobby", games, user.name, user.highScore!);
 
     callback({
       success: true,
@@ -264,16 +267,12 @@ export const handleConnection = (
           return;
         }
 
-       
         const roomUsers = _user.room.users;
         // Define an array to store all the reaction times of both players
         let reactionTimes: number[] = [];
-         console.log("hi", users[0].speed)
-        console.log("hello", users[1].speed)  
 
         if (roomUsers[1].speed > 0 && roomUsers[0].speed > 0) {
-
-            socket.on("reactionTime", async (reactionTime) => {
+          socket.on("reactionTime", async (reactionTime) => {
             // Find the user associated with the given socket ID
             const user = await prisma.user.findUnique({
               where: {
@@ -285,11 +284,12 @@ export const handleConnection = (
               // Push the reaction time to the array
               reactionTimes.push(reactionTime);
 
-                console.log('is this working?',reactionTime)
-
               // Calculate the average reaction time after every round
-               const avgReactionTime = reactionTimes.length > 0 ? reactionTimes.reduce((acc, time) => acc + time, 0) / reactionTimes.length : 0;
-
+              const avgReactionTime =
+                reactionTimes.length > 0
+                  ? reactionTimes.reduce((acc, time) => acc + time, 0) /
+                    reactionTimes.length
+                  : 0;
 
               // Update the user's high score in the database
               await prisma.user.update({
@@ -301,8 +301,6 @@ export const handleConnection = (
                 },
               });
             }
-
-           
           });
 
           const [fastestUser, secondFastestUser] =
@@ -346,7 +344,7 @@ export const handleConnection = (
           });
         }
 
-        const games = await prisma.game.findMany()
+        const games = await prisma.game.findMany();
         io.emit("updateLobby", games, user.name, user.highScore!);
 
         const updatedRoomUsers = await prisma.user.findMany({
@@ -361,32 +359,28 @@ export const handleConnection = (
   socket.on("gameOver", async (socketId) => {
     const _user = await prisma.user.findUnique({
       where: {
-        id: socketId
-      }
-    })
+        id: socketId,
+      },
+    });
 
     if (!_user) {
-      return
+      return;
     }
 
     const users = await prisma.user.findMany({
       where: {
-        roomId: _user.roomId
-      }
-    })
-
-    console.log(users)
+        roomId: _user.roomId,
+      },
+    });
 
     if (users[0] && users[1]) {
       const game = await prisma.game.create({
         data: {
           users: [users[0].name, users[1].name],
-          scores: [users[0].score, users[1].score]
-        }
-      })
+          scores: [users[0].score, users[1].score],
+        },
+      });
     }
-
-      // console.log(game)
 
     // Update user.roomId to the lobbyId & speed to 0
     const user = await prisma.user.update({
@@ -403,9 +397,7 @@ export const handleConnection = (
     // User joins lobby room
     socket.join("63ff434d4572c0af47e2782b");
 
-    const games = await prisma.game.findMany()
+    const games = await prisma.game.findMany();
     io.emit("updateLobby", games, user.name, user.highScore!);
   });
 };
-
- 

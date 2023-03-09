@@ -15,8 +15,10 @@ const lobbyEl = document.querySelector("#lobby") as HTMLDivElement;
 const gameEl = document.querySelector("#game") as HTMLDivElement;
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement;
 const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement;
-const highscroreEl = document.querySelector('#highscore')
-const lobbyScoreboardEl = document.querySelector("#lobbyScoreboard") as HTMLUListElement
+const highscroreEl = document.querySelector("#highscore");
+const lobbyScoreboardEl = document.querySelector(
+  "#lobbyScoreboard"
+) as HTMLUListElement;
 
 const userOneEl = document.querySelector("#userOne") as HTMLSpanElement;
 const userTwoEl = document.querySelector("#userTwo") as HTMLSpanElement;
@@ -47,8 +49,6 @@ const showLobby = () => {
   lobbyEl.classList.remove("hide");
   gameEl.classList.add("hide");
 
-  
-
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
@@ -70,14 +70,11 @@ const showLobby = () => {
                     </button>
                 </div>
                 
-            `
+            `;
       })
       .join("");
-   
   });
-
 };
-
 
 const showLoginView = () => {
   loginEl.classList.remove("hide");
@@ -98,7 +95,7 @@ socket.on("disconnect", () => {
   console.log("User disconnected", socket.id);
 });
 
-socket.on("updateLobby", (games, username, highScore) => {
+socket.on("updateLobby", (games) => {
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
@@ -122,23 +119,23 @@ socket.on("updateLobby", (games, username, highScore) => {
                     </button>
                 </div>
             `;
-
       })
-      .join("");   
+      .join("");
   });
 
-socket.emit('getHighestScore', (user) =>{
-  console.log('wohooo', user)
+  socket.emit("getHighestScore", (user) => {
     highscroreEl!.innerHTML = `
-        <span id="hiUser">${user.name}</span>:
-        <span id="hiScore">${user.highScore}</span>`
-});
+      <span id="hiUser">${user.name}</span>:
+      <span id="hiScore">${user.highScore}</span>
+    `;
+  });
 
-  const gamesList = games.slice(Math.max(games.length - 10, 0))
-  lobbyScoreboardEl.innerHTML = gamesList.map(game => {
-    return `<li>${game.users[0]}: ${game.scores[0]} | ${game.users[1]}: ${game.scores[1]}</li>`
-  })
-  .join("")
+  const gamesList = games.slice(Math.max(games.length - 10, 0));
+  lobbyScoreboardEl.innerHTML = gamesList
+    .map((game) => {
+      return `<li>${game.users[0]}: ${game.scores[0]} | ${game.users[1]}: ${game.scores[1]}</li>`;
+    })
+    .join("");
 });
 
 socket.on("startGame", (timeout, x, y) => {
@@ -153,10 +150,8 @@ socket.on("startGame", (timeout, x, y) => {
   }, timeout);
 });
 
-socket.on("waitingForPlayers", (users) => {
+socket.on("waitingForPlayers", () => {
   console.log("Waiting for a player to join...");
-
-  
 });
 
 socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
@@ -246,7 +241,7 @@ roomsEl.addEventListener("click", (e) => {
     }
 
     socket.on("userNames", (users) => {
-      users.forEach((user) => {
+      users.forEach(() => {
         userOneEl.innerText = users[0]?.name || "Empty";
         userTwoEl.innerText = users[1]?.name || "Empty";
 
@@ -270,7 +265,6 @@ roomsEl.addEventListener("click", (e) => {
   }
 });
 
-
 gameBoardEl.addEventListener("click", (e) => {
   const target = e.target as HTMLDivElement;
 
@@ -291,12 +285,8 @@ gameBoardEl.addEventListener("click", (e) => {
       reactionTime,
       socket.id
     );
-    socket.emit('reactionTime', reactionTime)
-    
+    socket.emit("reactionTime", reactionTime);
 
     gameBoardEl.innerHTML = "";
-
-
   }
 });
-
