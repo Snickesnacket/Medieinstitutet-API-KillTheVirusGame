@@ -15,12 +15,18 @@ model Room {
 }
 
 model User {
-  id    String @id @map("_id")
-  name  String @unique
-  speed Float
-  score Int
+  id        String @id @map("_id")
+  name      String @unique
+  speed     Float
+  score     Int
   highScore Float?
 
-  roomId String @db.ObjectId
-  room   Room   @relation(fields: [roomId], references: [id])
+  roomId String  @db.ObjectId
+  room   Room    @relation(fields: [roomId], references: [id])
+}
+
+model Game {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  users  String[]
+  scores Int[]
 }
