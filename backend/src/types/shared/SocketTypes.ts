@@ -38,6 +38,7 @@ export interface ClientToServerEvents {
   gameOver: (socketId: string) => void;
   reactionTime: (reactionTime: number) => void;
   getHighestScore: (callback: (users: any) => void) => void;
+  lowestHighScoreUser: (username: string, highScore: number) => void;
 }
 
 export interface RoomInfoData extends Room {

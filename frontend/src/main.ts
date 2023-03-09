@@ -41,8 +41,37 @@ let gameRound: number = 0;
 let createdTime: number = 0;
 let clickTime: number = 0;
 
+// Live counter
+let counter: number = 0;
+let intervalId: number;
+const counterEl = document.querySelector(".counter") as HTMLSpanElement;
+
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
   io(SOCKET_HOST);
+
+const startCounter = () => {
+  const incrementTime = 1000 / (1 / 0.001);
+
+  let lastTime = Date.now();
+  intervalId = setInterval(() => {
+    const now = Date.now();
+    const elapsed = now - lastTime;
+    lastTime = now;
+
+    counter += (elapsed * 0.001) / incrementTime;
+
+    counterEl.innerText = counter.toFixed(3);
+  }, 1);
+};
+
+const stopCounter = () => {
+  clearInterval(intervalId);
+};
+
+const resetCounter = () => {
+  counter = 0;
+  counterEl.innerText = counter.toFixed(3);
+};
 
 const showLobby = () => {
   loginEl.classList.add("hide");
@@ -145,6 +174,9 @@ socket.on("startGame", (timeout, x, y) => {
     gameBoardEl.innerHTML += `
             <div id="virus" style="position: absolute; top: ${y}px; left: ${x}px;">👾</div>
         `;
+    stopCounter();
+    resetCounter();
+    startCounter();
 
     createdTime = Date.now();
   }, timeout);
@@ -170,12 +202,12 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
   if (gameRound === 10) {
     gameBoardEl.innerHTML = "";
 
-    if (users[0].score > users[1].score) {
-      alert(`${users[0].name} Won with ${users[0].score}!`);
+    if (users[1].score > users[0].score) {
+      alert(`${users[0].name} Won with ${users[1].score}!`);
     } else if (users[0].score == users[1].score) {
       alert("Draw! 5 - 5");
     } else {
-      alert(`${users[1].name} Won with ${users[1].score}!`);
+      alert(`${users[1].name} Won with ${users[0].score}!`);
     }
 
     socket.emit("gameOver", socket.id);
@@ -196,6 +228,9 @@ socket.on("updateGame", (users, newGameRound, timeout, x, y) => {
     gameBoardEl.innerHTML += `
             <div id="virus" style="position: absolute; top: ${y}px; left: ${x}px;">👾</div>
         `;
+    stopCounter();
+    resetCounter();
+    startCounter();
 
     // Time of virus render
     createdTime = Date.now();
@@ -278,6 +313,8 @@ gameBoardEl.addEventListener("click", (e) => {
 
     const reactionTime: number = (clickTime - createdTime) / 1000;
 
+    stopCounter();
+
     socket.emit(
       "virusClicked",
       gameBoardSize,
@@ -285,7 +322,15 @@ gameBoardEl.addEventListener("click", (e) => {
       reactionTime,
       socket.id
     );
+
     socket.emit("reactionTime", reactionTime);
+
+    socket.on("lowestHighScoreUser", (username, highScore) => {
+      highscroreEl!.innerHTML = `
+        <span id="hiUser">${username}</span>:
+        <span id="hiScore">${highScore}</span>
+      `;
+    });
 
     gameBoardEl.innerHTML = "";
   }
