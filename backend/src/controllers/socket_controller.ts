@@ -86,7 +86,7 @@ export const handleConnection = (
       },
     });
 
-    io.emit("updateLobby");
+    io.emit("updateLobby", user.name, user.highScore!);
   });
 
   const getNamesInRoom = async (roomId: string) => {
@@ -320,7 +320,7 @@ export const handleConnection = (
           });
         }
 
-        io.emit("updateLobby");
+        io.emit("updateLobby", user.name, user.highScore!);
 
         const updatedRoomUsers = await prisma.user.findMany({
           where: {
@@ -347,6 +347,6 @@ export const handleConnection = (
     // User joins lobby room
     socket.join("63ff434d4572c0af47e2782b");
 
-    io.emit("updateLobby");
+    io.emit("updateLobby", user.name, user.highScore!);
   });
 };
