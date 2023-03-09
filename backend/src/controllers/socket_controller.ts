@@ -15,6 +15,23 @@ export const handleConnection = (
 ) => {
   debug("A user connected", socket.id);
 
+     console.log("it is gonna happen")
+  socket.on("getHighestScore", async (callback) => {
+    const users = await prisma.user.findMany({
+              where: {
+                highScore: {
+                  gt: 0 
+                }
+              },
+              orderBy: {
+                highScore: 'asc' 
+              },
+              take: 1 
+            });
+ console.log("this is the highscore", users[0].highScore)
+    callback(users[0]);
+  });
+
   socket.on("getRoomList", async (callback) => {
     const rooms = await prisma.room.findMany({
       include: {
@@ -24,6 +41,7 @@ export const handleConnection = (
 
     callback(rooms);
   });
+
 
   socket.on("userJoin", async (gameBoardSize, username, roomId, callback) => {
     debug("🆕 %s joined room: %s", username, roomId);
@@ -56,7 +74,7 @@ export const handleConnection = (
                
               
                 if (previousHighScore === null || currentHighScore !== previousHighScore) {
-                  socket.emit('lowestHighScoreUser', currentUsername, currentHighScore!); 
+                  socket.emit('lowestHighScoreUser', currentUsername, currentHighScore!)
                   previousHighScore = { username: currentUsername, highScore: currentHighScore };
                 }
               }
