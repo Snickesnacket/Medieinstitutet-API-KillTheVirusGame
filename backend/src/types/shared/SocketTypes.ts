@@ -13,8 +13,8 @@ export interface ServerToClientEvents {
     y: number
   ) => void;
   userNames: (users: User[]) => void;
-  lowestHighScoreUser: ( username: string, highScore:number) => void;
-  updateLobby: (games: Game[], username: string, highScore:number) => void;
+  lowestHighScoreUser: (username: string, highScore: number) => void;
+  updateLobby: (games: Game[], username: string, highScore: number) => void;
 }
 
 export interface ClientToServerEvents {
@@ -37,7 +37,7 @@ export interface ClientToServerEvents {
   ) => void;
   gameOver: (socketId: string) => void;
   reactionTime: (reactionTime: number) => void;
-  lowestHighScoreUser: ( username: string, highScore:number) => void;
+  lowestHighScoreUser: (username: string, highScore: number) => void;
 }
 
 export interface RoomInfoData extends Room {

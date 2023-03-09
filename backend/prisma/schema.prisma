@@ -21,12 +21,12 @@ model User {
   score     Int
   highScore Float?
 
-  roomId String  @db.ObjectId
-  room   Room    @relation(fields: [roomId], references: [id])
+  roomId String @db.ObjectId
+  room   Room   @relation(fields: [roomId], references: [id])
 }
 
 model Game {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
   users  String[]
   scores Int[]
 }

@@ -15,8 +15,10 @@ const lobbyEl = document.querySelector("#lobby") as HTMLDivElement;
 const gameEl = document.querySelector("#game") as HTMLDivElement;
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement;
 const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement;
-const highscroreEl = document.querySelector('#highscore')
-const lobbyScoreboardEl = document.querySelector("#lobbyScoreboard") as HTMLUListElement
+const highscroreEl = document.querySelector("#highscore");
+const lobbyScoreboardEl = document.querySelector(
+  "#lobbyScoreboard"
+) as HTMLUListElement;
 
 const userOneEl = document.querySelector("#userOne") as HTMLSpanElement;
 const userTwoEl = document.querySelector("#userTwo") as HTMLSpanElement;
@@ -47,20 +49,20 @@ const counterEl = document.querySelector(".counter") as HTMLSpanElement;
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
   io(SOCKET_HOST);
 
-  const startCounter = () => {
-    const incrementTime = 1000 / (1 / 0.001); 
-  
-    let lastTime = Date.now();
-    intervalId = setInterval(() => {
-      const now = Date.now();
-      const elapsed = now - lastTime;
-      lastTime = now;
-  
-      counter += elapsed * 0.001 / incrementTime;
-  
-      counterEl.innerText = counter.toFixed(3);
-    }, 1);
-  };
+const startCounter = () => {
+  const incrementTime = 1000 / (1 / 0.001);
+
+  let lastTime = Date.now();
+  intervalId = setInterval(() => {
+    const now = Date.now();
+    const elapsed = now - lastTime;
+    lastTime = now;
+
+    counter += (elapsed * 0.001) / incrementTime;
+
+    counterEl.innerText = counter.toFixed(3);
+  }, 1);
+};
 
 const stopCounter = () => {
   clearInterval(intervalId);
@@ -75,8 +77,6 @@ const showLobby = () => {
   loginEl.classList.add("hide");
   lobbyEl.classList.remove("hide");
   gameEl.classList.add("hide");
-
-  
 
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
@@ -99,14 +99,11 @@ const showLobby = () => {
                     </button>
                 </div>
                 
-            `
+            `;
       })
       .join("");
-   
   });
-
 };
-
 
 const showLoginView = () => {
   loginEl.classList.remove("hide");
@@ -151,20 +148,21 @@ socket.on("updateLobby", (games, username, highScore) => {
                     </button>
                 </div>
             `;
-
       })
-      .join("");   
-             highscroreEl!.innerHTML = `
-     <span id="hiUser">${username}</span>:
-            <span id="hiScore">${highScore}</span>
-    `
+      .join("");
+
+    highscroreEl!.innerHTML = `
+      <span id="hiUser">${username}</span>:
+      <span id="hiScore">${highScore}</span>
+    `;
   });
 
-  const gamesList = games.slice(Math.max(games.length - 10, 0))
-  lobbyScoreboardEl.innerHTML = gamesList.map(game => {
-    return `<li>${game.users[0]}: ${game.scores[1]} | ${game.users[1]}: ${game.scores[0]}</li>`
-  })
-  .join("")
+  const gamesList = games.slice(Math.max(games.length - 10, 0));
+  lobbyScoreboardEl.innerHTML = gamesList
+    .map((game) => {
+      return `<li>${game.users[0]}: ${game.scores[1]} | ${game.users[1]}: ${game.scores[0]}</li>`;
+    })
+    .join("");
 });
 
 socket.on("startGame", (timeout, x, y) => {
@@ -300,7 +298,6 @@ roomsEl.addEventListener("click", (e) => {
   }
 });
 
-
 gameBoardEl.addEventListener("click", (e) => {
   const target = e.target as HTMLDivElement;
 
@@ -323,18 +320,15 @@ gameBoardEl.addEventListener("click", (e) => {
       reactionTime,
       socket.id
     );
-    socket.on('lowestHighScoreUser', ( username, highScore ) => {
-    console.log("frontend says hi",username, highScore)
+    socket.on("lowestHighScoreUser", (username, highScore) => {
+      console.log("frontend says hi", username, highScore);
 
-    highscroreEl!.innerHTML = `
-     <span id="hiUser">${username}</span>:
-            <span id="hiScore">${highScore}</span>
-    `
-})
+      highscroreEl!.innerHTML = `
+        <span id="hiUser">${username}</span>:
+        <span id="hiScore">${highScore}</span>
+      `;
+    });
 
     gameBoardEl.innerHTML = "";
-
-
   }
 });
-
