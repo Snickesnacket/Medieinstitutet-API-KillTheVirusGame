@@ -87,7 +87,8 @@ export const handleConnection = (
     });
 
     const games = await prisma.game.findMany()
-    io.emit("updateLobby", games);
+    // io.emit("updateLobby", games);
+    io.emit("updateLobby", games, user.name, user.highScore!);
   });
 
   const getNamesInRoom = async (roomId: string) => {
@@ -129,7 +130,7 @@ export const handleConnection = (
     });
 
     const games = await prisma.game.findMany()
-    io.emit("updateLobby", games)
+    io.emit("updateLobby", games, user.name, user.highScore!)
 
     callback({
       success: true,
@@ -325,8 +326,7 @@ export const handleConnection = (
         }
 
         const games = await prisma.game.findMany()
-
-        io.emit("updateLobby", games);
+        io.emit("updateLobby", games, user.name, user.highScore!);
 
         const updatedRoomUsers = await prisma.user.findMany({
           where: {
@@ -383,6 +383,6 @@ export const handleConnection = (
     socket.join("63ff434d4572c0af47e2782b");
 
     const games = await prisma.game.findMany()
-    io.emit("updateLobby", games);
+    io.emit("updateLobby", games, user.name, user.highScore!);
   });
 };

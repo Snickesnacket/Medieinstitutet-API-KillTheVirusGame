@@ -46,15 +46,7 @@ const showLobby = () => {
   loginEl.classList.add("hide");
   lobbyEl.classList.remove("hide");
   gameEl.classList.add("hide");
-  
-  socket.on('lowestHighScoreUser', ( username, highScore ) => {
-    console.log("frontend says hi",username, highScore)
 
-    highscroreEl!.innerHTML = `
-     <span id="hiUser">${username}</span>:
-            <span id="hiScore">${highScore}</span>
-    `
-})
   
 
   socket.emit("getRoomList", (rooms) => {
@@ -84,18 +76,7 @@ const showLobby = () => {
    
   });
 
-    socket.on('lowestHighScoreUser', ( username, highScore ) => {
-    console.log("frontend says hi",username, highScore)
-
-    highscroreEl!.innerHTML = `
-     <span id="hiUser">${username}</span>:
-            <span id="hiScore">${highScore}</span>
-    `
-})
 };
-
-  
-
 
 
 const showLoginView = () => {
@@ -117,7 +98,7 @@ socket.on("disconnect", () => {
   console.log("User disconnected", socket.id);
 });
 
-socket.on("updateLobby", (games) => {
+socket.on("updateLobby", (games, username, highScore) => {
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
@@ -141,8 +122,13 @@ socket.on("updateLobby", (games) => {
                     </button>
                 </div>
             `;
+
       })
-      .join("");
+      .join("");   
+             highscroreEl!.innerHTML = `
+     <span id="hiUser">${username}</span>:
+            <span id="hiScore">${highScore}</span>
+    `
   });
 
   const gamesList = games.slice(Math.max(games.length - 10, 0))
@@ -300,8 +286,6 @@ gameBoardEl.addEventListener("click", (e) => {
       reactionTime,
       socket.id
     );
-
-         socket.emit('reactionTime', reactionTime)
     socket.on('lowestHighScoreUser', ( username, highScore ) => {
     console.log("frontend says hi",username, highScore)
 
