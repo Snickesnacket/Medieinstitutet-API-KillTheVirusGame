@@ -15,6 +15,8 @@ const lobbyEl = document.querySelector("#lobby") as HTMLDivElement;
 const gameEl = document.querySelector("#game") as HTMLDivElement;
 const roomsEl = document.querySelector("#rooms") as HTMLDivElement;
 const gameBoardEl = document.querySelector(".game-board") as HTMLDivElement;
+const highscroreEl = document.querySelector('#highscore')
+const lobbyScoreboardEl = document.querySelector("#lobbyScoreboard") as HTMLUListElement
 
 const userOneEl = document.querySelector("#userOne") as HTMLSpanElement;
 const userTwoEl = document.querySelector("#userTwo") as HTMLSpanElement;
@@ -74,6 +76,8 @@ const showLobby = () => {
   lobbyEl.classList.remove("hide");
   gameEl.classList.add("hide");
 
+  
+
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
@@ -94,11 +98,15 @@ const showLobby = () => {
                         JOIN GAME
                     </button>
                 </div>
-            `;
+                
+            `
       })
       .join("");
+   
   });
+
 };
+
 
 const showLoginView = () => {
   loginEl.classList.remove("hide");
@@ -119,7 +127,7 @@ socket.on("disconnect", () => {
   console.log("User disconnected", socket.id);
 });
 
-socket.on("updateLobby", () => {
+socket.on("updateLobby", (games, username, highScore) => {
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
@@ -143,9 +151,20 @@ socket.on("updateLobby", () => {
                     </button>
                 </div>
             `;
+
       })
-      .join("");
+      .join("");   
+             highscroreEl!.innerHTML = `
+     <span id="hiUser">${username}</span>:
+            <span id="hiScore">${highScore}</span>
+    `
   });
+
+  const gamesList = games.slice(Math.max(games.length - 10, 0))
+  lobbyScoreboardEl.innerHTML = gamesList.map(game => {
+    return `<li>${game.users[0]}: ${game.scores[0]} | ${game.users[1]}: ${game.scores[1]}</li>`
+  })
+  .join("")
 });
 
 socket.on("startGame", (timeout, x, y) => {
@@ -281,6 +300,7 @@ roomsEl.addEventListener("click", (e) => {
   }
 });
 
+
 gameBoardEl.addEventListener("click", (e) => {
   const target = e.target as HTMLDivElement;
 
@@ -303,7 +323,18 @@ gameBoardEl.addEventListener("click", (e) => {
       reactionTime,
       socket.id
     );
+    socket.on('lowestHighScoreUser', ( username, highScore ) => {
+    console.log("frontend says hi",username, highScore)
+
+    highscroreEl!.innerHTML = `
+     <span id="hiUser">${username}</span>:
+            <span id="hiScore">${highScore}</span>
+    `
+})
 
     gameBoardEl.innerHTML = "";
+
+
   }
 });
+

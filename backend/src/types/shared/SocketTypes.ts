@@ -1,4 +1,4 @@
-import { Room, User } from "@prisma/client";
+import { Room, User, Game } from "@prisma/client";
 export {};
 
 export interface ServerToClientEvents {
@@ -13,7 +13,8 @@ export interface ServerToClientEvents {
     y: number
   ) => void;
   userNames: (users: User[]) => void;
-  updateLobby: () => void;
+  lowestHighScoreUser: ( username: string, highScore:number) => void;
+  updateLobby: (games: Game[], username: string, highScore:number) => void;
 }
 
 export interface ClientToServerEvents {
@@ -35,6 +36,8 @@ export interface ClientToServerEvents {
     socketId: string
   ) => void;
   gameOver: (socketId: string) => void;
+  reactionTime: (reactionTime: number) => void;
+  lowestHighScoreUser: ( username: string, highScore:number) => void;
 }
 
 export interface RoomInfoData extends Room {
