@@ -86,7 +86,8 @@ export const handleConnection = (
       },
     });
 
-    io.emit("updateLobby");
+    const games = await prisma.game.findMany()
+    io.emit("updateLobby", games);
   });
 
   const getNamesInRoom = async (roomId: string) => {
@@ -320,7 +321,9 @@ export const handleConnection = (
           });
         }
 
-        io.emit("updateLobby");
+        const games = await prisma.game.findMany()
+
+        io.emit("updateLobby", games);
 
         const updatedRoomUsers = await prisma.user.findMany({
           where: {
@@ -332,6 +335,33 @@ export const handleConnection = (
   );
 
   socket.on("gameOver", async (socketId) => {
+    const _user = await prisma.user.findUnique({
+      where: {
+        id: socketId
+      }
+    })
+
+    if (!_user) {
+      return
+    }
+
+    const users = await prisma.user.findMany({
+      where: {
+        roomId: _user.roomId
+      }
+    })
+
+    console.log(users)
+
+      const game = await prisma.game.create({
+        data: {
+          users: [users[0].name, users[1].name],
+          scores: [users[0].score, users[1].score]
+        }
+      })
+
+      console.log(game)
+
     // Update user.roomId to the lobbyId & speed to 0
     const user = await prisma.user.update({
       where: {
@@ -347,6 +377,7 @@ export const handleConnection = (
     // User joins lobby room
     socket.join("63ff434d4572c0af47e2782b");
 
-    io.emit("updateLobby");
+    const games = await prisma.game.findMany()
+    io.emit("updateLobby", games);
   });
 };
