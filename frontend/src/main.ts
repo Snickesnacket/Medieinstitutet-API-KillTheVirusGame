@@ -98,7 +98,7 @@ socket.on("disconnect", () => {
   console.log("User disconnected", socket.id);
 });
 
-socket.on("updateLobby", (games, username, highScore) => {
+socket.on("updateLobby", (games) => {
   socket.emit("getRoomList", (rooms) => {
     roomsEl.innerHTML = rooms
       .filter((room) => room.name !== "#lobby")
@@ -125,11 +125,16 @@ socket.on("updateLobby", (games, username, highScore) => {
 
       })
       .join("");   
-             highscroreEl!.innerHTML = `
+  });
+
+  socket.on('lowestHighScoreUser', ( username, highScore ) => {
+    console.log("frontend says hi",username, highScore)
+
+    highscroreEl!.innerHTML += `
      <span id="hiUser">${username}</span>:
             <span id="hiScore">${highScore}</span>
     `
-  });
+})
 
   const gamesList = games.slice(Math.max(games.length - 10, 0))
   lobbyScoreboardEl.innerHTML = gamesList.map(game => {
@@ -286,14 +291,8 @@ gameBoardEl.addEventListener("click", (e) => {
       reactionTime,
       socket.id
     );
-    socket.on('lowestHighScoreUser', ( username, highScore ) => {
-    console.log("frontend says hi",username, highScore)
-
-    highscroreEl!.innerHTML = `
-     <span id="hiUser">${username}</span>:
-            <span id="hiScore">${highScore}</span>
-    `
-})
+    socket.emit('reactionTime', reactionTime)
+    
 
     gameBoardEl.innerHTML = "";
 

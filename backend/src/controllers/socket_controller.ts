@@ -36,6 +36,30 @@ export const handleConnection = (
         users: true,
       },
     });
+            const users = await prisma.user.findMany({
+              where: {
+                highScore: {
+                  gt: 0 
+                }
+              },
+              orderBy: {
+                highScore: 'asc' 
+              },
+              take: 1 
+            })
+               let previousHighScore: any | null = null;
+
+              if (users.length > 0) {
+                const currentHighScore = users[0].highScore; 
+                const currentUsername = users[0]?.name;
+          
+               
+              
+                if (previousHighScore === null || currentHighScore !== previousHighScore) {
+                  socket.emit('lowestHighScoreUser', currentUsername, currentHighScore!); 
+                  previousHighScore = { username: currentUsername, highScore: currentHighScore };
+                }
+              }
 
     socket.join(roomId);
 
@@ -87,8 +111,8 @@ export const handleConnection = (
     });
 
     const games = await prisma.game.findMany()
-    // io.emit("updateLobby", games);
     io.emit("updateLobby", games, user.name, user.highScore!);
+   
   });
 
   const getNamesInRoom = async (roomId: string) => {
@@ -130,7 +154,7 @@ export const handleConnection = (
     });
 
     const games = await prisma.game.findMany()
-    io.emit("updateLobby", games, user.name, user.highScore!)
+    io.emit("updateLobby", games, user.name, user.highScore! )
 
     callback({
       success: true,
@@ -260,28 +284,7 @@ export const handleConnection = (
               });
             }
 
-              const users = await prisma.user.findMany({
-              where: {
-                highScore: {
-                  gt: 0 
-                }
-              },
-              orderBy: {
-                highScore: 'asc' 
-              },
-              take: 1 
-            })
-               let previousHighScore: any | null = null;
-
-              if (users.length > 0) {
-                const currentHighScore = users[0].highScore; 
-                const currentUsername = users[0]?.name;
-          
-                if (previousHighScore === null || currentHighScore !== previousHighScore) {
-                  socket.emit('lowestHighScoreUser', currentUsername, currentHighScore!); 
-                  previousHighScore = { username: currentUsername, highScore: currentHighScore };
-                }
-              }
+           
           });
 
           const [fastestUser, secondFastestUser] =
@@ -386,3 +389,5 @@ export const handleConnection = (
     io.emit("updateLobby", games, user.name, user.highScore!);
   });
 };
+
+ 
