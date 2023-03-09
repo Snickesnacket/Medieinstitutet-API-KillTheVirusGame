@@ -1,0 +1,23 @@
+#app,
+#login {
+  height: 100vh;
+  width: 100vw;
+}
+
+#app {
+  background-color: lightblue;
+}
+
+#login {
+  display: flex;
+  align-items: center;
+
+  #username-form {
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+#login.hide {
+  display: none;
+}

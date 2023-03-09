@@ -1,0 +1,49 @@
+#game {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1rem;
+  height: 100vh;
+  width: 100vw;
+  padding: 1rem;
+}
+
+.game-board {
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgb(155, 196, 196);
+  background-color: seashell;
+  cursor: crosshair;
+}
+
+.scoreboard-title {
+  background-color: rgb(155, 196, 196);
+  color: white;
+}
+
+.score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.score .username {
+  color: darkgray;
+}
+.score .score-result {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  font-size: 2rem;
+  color: gray;
+}
+
+.user-time {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  background-color: rgb(155, 196, 196);
+}
+.user-time .username-time {
+  font-size: 1.4rem;
+}
+.user-time .time {
+  font-size: 3rem;
+}/*# sourceMappingURL=game.css.map */

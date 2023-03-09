@@ -1,0 +1,16 @@
+@import "bootstrap/scss/bootstrap";
+
+@import "./login/login.scss";
+@import "./lobby/lobby.scss";
+@import "./game/game.scss";
+
+.hide {
+  // display: none !important;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
+body {
+  background-color: lightblue;
+}
