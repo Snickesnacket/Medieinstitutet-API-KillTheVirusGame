@@ -145,7 +145,8 @@ socket.on("updateLobby", (games) => {
       .join("");
   });
 
-  lobbyScoreboardEl.innerHTML = games.map(game => {
+  const gamesList = games.slice(Math.max(games.length - 10, 0))
+  lobbyScoreboardEl.innerHTML = gamesList.map(game => {
     return `<li>${game.users[0]}: ${game.scores[0]} | ${game.users[1]}: ${game.scores[1]}</li>`
   })
   .join("")
