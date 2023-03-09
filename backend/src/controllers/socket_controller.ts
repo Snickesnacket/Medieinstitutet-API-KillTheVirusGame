@@ -353,14 +353,16 @@ export const handleConnection = (
 
     console.log(users)
 
+    if (users[0] && users[1]) {
       const game = await prisma.game.create({
         data: {
           users: [users[0].name, users[1].name],
           scores: [users[0].score, users[1].score]
         }
       })
+    }
 
-      console.log(game)
+      // console.log(game)
 
     // Update user.roomId to the lobbyId & speed to 0
     const user = await prisma.user.update({
